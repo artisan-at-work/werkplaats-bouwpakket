@@ -94,11 +94,19 @@ meet() {
       e="$(echo "$uit" | grep -o '"errors":[0-9]*' | head -1 | grep -o '[0-9]*')"
       f="$(echo "$uit" | grep -o '"file_errors":[0-9]*' | head -1 | grep -o '[0-9]*')"
       echo $(( ${e:-0} + ${f:-0} )) ;;
+    "rector-wijzigingen")
+      # Bestanden die Rector nog zou aanpassen.
+      [ -x vendor/bin/rector ] || { echo "?"; return; }
+      vendor/bin/rector process --dry-run --output-format=json 2>/dev/null | grep -o '"changed_files": *[0-9]*' | grep -o '[0-9]*$' || echo 0 ;;
     "regels in de phpstan-baseline")
       if [ -f phpstan-baseline.neon ]; then grep -c 'message:' phpstan-baseline.neon; else echo 0; fi ;;
     "opmaakfouten")
       if [ -x vendor/bin/pint ]; then
         vendor/bin/pint --test --format=json 2>/dev/null | grep -o '"path":' | wc -l | tr -d ' '
+      elif [ -x vendor/bin/php-cs-fixer ]; then
+        vendor/bin/php-cs-fixer fix --dry-run --format=json 2>/dev/null | grep -o '"name":' | wc -l | tr -d ' '
+      elif [ -x vendor/bin/phpcs ]; then
+        vendor/bin/phpcs --report=json -q 2>/dev/null | grep -o '"totals":{"errors":[0-9]*' | grep -o '[0-9]*$' || echo 0
       elif [ "$stack" = "node" ] && [ -f node_modules/.bin/prettier ]; then
         node_modules/.bin/prettier --list-different . 2>/dev/null | wc -l | tr -d ' '
       else

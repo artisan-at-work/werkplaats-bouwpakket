@@ -16,6 +16,7 @@ telling "Order::query()"        niet meer dan nu
 # overgeslagen tests            altijd 0
 # opmaakfouten                  altijd 0
 # kwetsbare packages            altijd 0
+# rector-wijzigingen            niet meer dan nu
 # regels in de phpstan-baseline niet meer dan nu
 # tests aangepast zonder code   altijd 0
 # eigen "naam": commando dat één getal geeft    niet meer dan nu

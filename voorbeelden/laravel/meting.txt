@@ -6,6 +6,7 @@ aantal tests                       niet minder dan nu
 phpstan-fouten                     niet meer dan nu
 regels in de phpstan-baseline      niet meer dan nu
 opmaakfouten                       niet meer dan nu
+rector-wijzigingen                 niet meer dan nu
 kwetsbare packages                 altijd 0
 
 # Eigen risico's: patronen die niet mogen groeien.

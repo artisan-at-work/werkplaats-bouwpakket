@@ -75,4 +75,5 @@ Vul `docs/agents/autonomie.md` in met tien echte wijzigingen van de afgelopen we
 - **De hook doet niets.** Start `claude` opnieuw en kijk met `/hooks` of hij er staat. Controleer `chmod +x`.
 - **De meting toont een vraagteken.** Dat cijfer kan `bin/meting` in jullie stack niet meten. Haal de regel weg, of gebruik `eigen "naam": commando`.
 - **De tests duren te lang voor de klaar-hook.** Laat de meting alleen de snelle checks doen en draai de volledige suite in CI.
+- **Opmaak.** `opmaakfouten` werkt met Pint, PHP-CS-Fixer, PHP_CodeSniffer of Prettier, wat er in de repo staat.
 - **Windows.** De hooks en `bin/meting` zijn bash. Gebruik Git Bash of WSL.
