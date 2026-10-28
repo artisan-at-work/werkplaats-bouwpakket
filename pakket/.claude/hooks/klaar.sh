@@ -9,6 +9,10 @@ if echo "$invoer" | grep -q '"stop_hook_active": *true'; then
 fi
 
 cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+
+# Zonder nulmeting staat de poort nog uit. Zo kan /inrichten zijn werk doen.
+[ -f meting-nulmeting.txt ] || exit 0
+
 uitslag="$(bin/meting --poort 2>&1)"
 code=$?
 

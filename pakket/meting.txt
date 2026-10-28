@@ -1,7 +1,7 @@
 # Wat we meten, en hoe streng.
 # Elke regel: wat je meet, en daarachter de grens.
 # Er zijn drie grenzen: altijd 0, niet meer dan nu, niet minder dan nu.
-# "Nu" is de nulmeting: bin/meting --nulmeting op de hoofdbranch.
+# "Nu" is de nulmeting: bin/meting --nulmeting. Pas daarna staat de klaar-hook aan.
 
 gefaalde tests                  altijd 0
 aantal tests                    niet minder dan nu
@@ -10,7 +10,7 @@ phpstan-fouten                  niet meer dan nu
 # Eén eigen risico: tel hoe vaak iets in de code voorkomt.
 # telling "tekst"             telt in app/ (of src/)
 # telling "tekst" in map/     telt in een andere map
-telling "Order::query()"        niet meer dan nu
+# telling "Order::query()"      niet meer dan nu
 
 # Meer mogelijkheden, haal het hekje weg om ze te gebruiken:
 # overgeslagen tests            altijd 0

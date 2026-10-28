@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Zet het bouwpakket in de repo waar je nu staat. Overschrijft niets.
+#
+#   cd jouw-repo
+#   ../werkplaats-bouwpakket/installeer
+
+PAKKET="$(cd "$(dirname "$0")" && pwd)/pakket"
+
+if [ ! -f composer.json ] && [ ! -f package.json ]; then
+  echo "Hier staat geen composer.json of package.json. Ga naar de map van je applicatie en probeer het opnieuw."
+  exit 1
+fi
+
+nieuw=()
+bestond=()
+
+while IFS= read -r rel; do
+  if [ -e "$rel" ]; then
+    bestond+=("$rel")
+  else
+    mkdir -p "$(dirname "$rel")"
+    cp "$PAKKET/$rel" "$rel"
+    nieuw+=("$rel")
+  fi
+done < <(cd "$PAKKET" && find . -type f | sed 's|^\./||' | sort)
+
+# /inrichten moet weten waar de sjablonen staan.
+if [ -f .claude/commands/inrichten.md ]; then
+  sed "s|{{PAKKET}}|$PAKKET|g" .claude/commands/inrichten.md > .claude/commands/inrichten.md.tmp && mv .claude/commands/inrichten.md.tmp .claude/commands/inrichten.md
+fi
+chmod +x bin/meting .claude/hooks/*.sh 2>/dev/null
+
+echo "Neergezet:"
+for f in "${nieuw[@]}"; do echo "  + $f"; done
+
+if [ "${#bestond[@]}" -gt 0 ]; then
+  echo
+  echo "Bestond al, blijft staan. /inrichten voegt het sjabloon samen met jullie versie:"
+  for f in "${bestond[@]}"; do echo "  = $f"; done
+fi
+
+echo
+echo "Volgende stap: start claude en typ /inrichten"
