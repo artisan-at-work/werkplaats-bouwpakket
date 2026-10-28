@@ -35,6 +35,13 @@ if [ -f .claude/commands/inrichten.md ]; then
 fi
 chmod +x bin/meting .claude/hooks/*.sh 2>/dev/null
 
+# Het stappenplan krijgt de naam van deze repo.
+PLAN="docs/agents/stappenplan.html"
+if [ -f "$PLAN" ]; then
+  REPO="$(basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")"
+  sed "s|{{REPO}}|$REPO|g" "$PLAN" > "$PLAN.tmp" && mv "$PLAN.tmp" "$PLAN"
+fi
+
 echo "Neergezet:"
 for f in "${nieuw[@]}"; do echo "  + $f"; done
 
@@ -45,4 +52,14 @@ if [ "${#bestond[@]}" -gt 0 ]; then
 fi
 
 echo
+echo "Stappenplan: $PLAN"
 echo "Volgende stap: start claude en typ /inrichten"
+
+# Open het stappenplan in de browser. Zet WERKPLAATS_NIET_OPENEN=1 om dat over te slaan.
+if [ -f "$PLAN" ] && [ -z "${WERKPLAATS_NIET_OPENEN:-}" ]; then
+  case "$(uname -s)" in
+    Darwin) open "$PLAN" ;;
+    Linux) command -v xdg-open >/dev/null && xdg-open "$PLAN" >/dev/null 2>&1 & ;;
+    MINGW*|MSYS*|CYGWIN*) start "" "$PLAN" ;;
+  esac
+fi

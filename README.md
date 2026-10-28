@@ -22,7 +22,7 @@ git switch -c werkplaats
 ../werkplaats-bouwpakket/installeer
 ```
 
-Het script zet alleen bestanden neer die er nog niet zijn. Had je al een `CLAUDE.md`, `AGENTS.md` of `.claude/settings.json`, dan blijven die staan en zegt het script dat.
+Het script zet alleen bestanden neer die er nog niet zijn, en opent daarna het stappenplan (`docs/agents/stappenplan.html`) in je browser. Daarin staan alle stappen hieronder, met commando's die je kunt kopiëren. Had je al een `CLAUDE.md`, `AGENTS.md` of `.claude/settings.json`, dan blijven die staan en zegt het script dat.
 
 ### De agent schrijft de eerste versie
 
@@ -128,6 +128,7 @@ Een **issue** is de opdracht voor de agent. Een **eval** is voor jou: wat de age
 | `issues/sjabloon.md` | Een opdracht: context, klaar als, niet doen. |
 | `evals/` | Gevallen met een bekend antwoord, en een scorelijst. |
 | `.claude/commands/inrichten.md` | De opdracht achter `/inrichten`. |
+| `docs/agents/stappenplan.html` | Het stappenplan voor de middag, met kopieerbare commando's. Opent na het installeren. |
 
 ### Wat `meting.txt` kan meten
 

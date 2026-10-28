@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stappenplan · {{REPO}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FBF9F5}
+a{color:#AF101A}a:hover{color:#7E0B12}
+.stap{background:#FFFFFF;border:1px solid #E7E3DC;border-radius:22px;padding:28px 32px;display:grid;grid-template-columns:64px minmax(0,1fr);column-gap:22px;row-gap:16px}
+.stap.klaar{background:#F6F3EE}
+.nr{width:48px;height:48px;border-radius:50%;background:#1B1C1A;color:#FFFFFF;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;display:flex;align-items:center;justify-content:center}
+.stap.klaar .nr{background:#FFFFFF;color:#AF101A;border:2px solid #AF101A;box-sizing:border-box}
+.kop{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.kop h2{margin:0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:30px;line-height:1.1;letter-spacing:-.01em;color:#1B1C1A}
+.tijd{font-family:Inter,sans-serif;font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#625D5B}
+.uitleg{margin:6px 0 0;font-family:Inter,sans-serif;font-size:19px;line-height:1.45;color:#625D5B;max-width:720px}
+.blok{display:flex;flex-direction:column;gap:10px}
+.waar{font-family:Inter,sans-serif;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#625D5B}
+.cmd{display:flex;align-items:center;gap:14px;background:#1B1C1A;border-radius:14px;padding:14px 14px 14px 20px}
+.cmd code{flex:1;min-width:0;overflow-x:auto;white-space:pre;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:17px;font-variant-ligatures:none;color:#FFFFFF}
+.cmd code .d{color:#B9B2A8}
+.prompt{display:flex;align-items:center;gap:14px;background:#F3EFE8;border-radius:18px 18px 18px 6px;padding:14px 14px 14px 20px}
+.prompt span{flex:1;min-width:0;font-family:Inter,sans-serif;font-size:19px;line-height:1.4;color:#1B1C1A}
+.kopieer{flex:none;min-height:44px;padding:0 16px;border-radius:10px;border:0;background:#FFFFFF;color:#1B1C1A;font-family:Inter,sans-serif;font-weight:600;font-size:14px;cursor:pointer}
+.prompt .kopieer{background:#1B1C1A;color:#FFFFFF}
+.kopieer:hover{background:#FBE9E7;color:#AF101A}
+.klaarals{display:flex;gap:12px;align-items:baseline;padding-top:14px;border-top:1px solid #EDE9E2;font-family:Inter,sans-serif;font-size:18px;line-height:1.4;color:#1B1C1A}
+.klaarals b{flex:none;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#AF101A}
+.vink{display:flex;align-items:center;gap:10px;min-height:44px;font-family:Inter,sans-serif;font-size:15px;color:#625D5B;cursor:pointer}
+.vink input{width:20px;height:20px;accent-color:#AF101A}
+.bestanden{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.bestand{border:1px solid #E7E3DC;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.pad{align-self:flex-start;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:15px;font-variant-ligatures:none;padding:4px 10px;border-radius:8px;background:#EFEBE4;color:#1B1C1A}
+.vraag{font-family:Inter,sans-serif;font-size:16px;line-height:1.4;color:#625D5B}
+.twee{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px}
+.proef{border:1px solid #E7E3DC;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.proef h3{margin:0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;color:#1B1C1A}
+.verwacht{font-family:Inter,sans-serif;font-size:17px;line-height:1.4;color:#1B1C1A}
+.verwacht b{font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#625D5B;margin-right:8px}
+.velden{display:flex;gap:12px;flex-wrap:wrap}
+.veld{display:flex;flex-direction:column;gap:6px;flex:1;min-width:180px}
+.veld label{font-family:Inter,sans-serif;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#625D5B}
+.veld input{min-height:44px;box-sizing:border-box;border:1px solid #D9D4CB;border-radius:10px;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:16px;color:#1B1C1A;background:#FFFFFF}
+.hulp{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:10px 24px;font-family:Inter,sans-serif;font-size:17px;line-height:1.4}
+.hulp .p{font-weight:600;color:#1B1C1A}
+.hulp .o{color:#625D5B}
+
+html{scroll-behavior:smooth}
+.stap.gedaan .nr{background:#FFFFFF;color:#AF101A;border:2px solid #AF101A;box-sizing:border-box}
+.stap.gedaan{background:#F6F3EE}
+@media (max-width:640px){.stap{grid-template-columns:1fr;padding:22px 20px}.hulp{grid-template-columns:1fr}h1{font-size:40px!important}.twee{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div style="min-height: 100vh; background: #FBF9F5; color: #1B1C1A; font-family: Inter, sans-serif; padding: 56px 24px 96px; box-sizing: border-box">
+<div style="max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
+
+<header style="display: flex; flex-direction: column; gap: 14px; padding-bottom: 12px">
+<div style="display: flex; align-items: center; gap: 14px; font-family: Inter, sans-serif; font-weight: 600; font-size: 15px; letter-spacing: .16em; text-transform: uppercase; color: #625D5B"><span style="width: 40px; height: 2px; background: #AF101A"></span>De Werkplaats · stappenplan</div>
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 56px; line-height: 1.04; letter-spacing: -.025em">Het harnas in <span style="color: #AF101A">{{REPO}}</span>.</h1>
+<p style="margin: 0; max-width: 760px; font-size: 21px; line-height: 1.45; color: #625D5B">Acht stappen, ongeveer een middag. De agent schrijft de eerste versie, jullie keuren hem goed. Elk commando kun je kopiëren.</p>
+<nav aria-label="Stappen" style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 8px">
+<a href="#stap1" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; gap: 8px; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #AF101A; font-size: 15px; font-weight: 500">1 Installeren ✓</a>
+<a href="#stap2" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">2 /inrichten</a>
+<a href="#stap3" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">3 Beoordelen</a>
+<a href="#stap4" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">4 Nulmeting</a>
+<a href="#stap5" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">5 Twee proeven</a>
+<a href="#stap6" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">6 Eén echt geval</a>
+<a href="#stap7" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">7 De matrix</a>
+<a href="#stap8" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">8 Pull request</a>
+</nav>
+</header>
+
+<section id="stap1" class="stap klaar">
+<div class="nr">✓</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="kop"><h2>Installeren</h2><span class="tijd">Gedaan</span></div>
+<p class="uitleg">Dit stappenplan opende omdat het installeerscript klaar is. Het zette alleen bestanden neer die er nog niet waren.</p>
+<div class="blok"><span class="waar">Terminal · in je repo</span>
+<div class="cmd"><code>git switch -c werkplaats
+../werkplaats-bouwpakket/installeer</code><button class="kopieer" type="button" data-cmd="git switch -c werkplaats
+../werkplaats-bouwpakket/installeer">Kopieer</button></div></div>
+</div>
+</section>
+
+<section id="stap2" class="stap">
+<div class="nr">2</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="kop"><h2>De agent schrijft de eerste versie</h2><span class="tijd">15 min</span></div>
+<p class="uitleg">De agent leest jullie repo, je tests, PHPStan, CI en wat er al in CLAUDE.md staat. Hij schrijft concepten en commit niets.</p>
+<div class="blok"><span class="waar">Terminal</span>
+<div class="cmd"><code>claude</code><button class="kopieer" type="button" data-cmd="claude">Kopieer</button></div></div>
+<div class="blok"><span class="waar">In Claude Code</span>
+<div class="prompt"><span>/inrichten</span><button class="kopieer" type="button" data-cmd="/inrichten">Kopieer</button></div></div>
+<div class="klaarals"><b>Klaar als</b><span>De agent per bestand de drie vragen van stap 3 geeft.</span></div>
+<label class="vink"><input type="checkbox" data-stap="2">Gedaan</label>
+</div>
+</section>
+
+<section id="stap3" class="stap">
+<div class="nr">3</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="kop"><h2>Samen beoordelen</h2><span class="tijd">45 min</span></div>
+<p class="uitleg">Hier zit het begrip. Loop de bestanden samen langs en pas aan wat niet klopt.</p>
+<div class="bestanden">
+<div class="bestand"><span class="pad">AGENTS.md</span><span class="vraag">Staat erin wat een nieuwe collega op dag één moet weten? Is het kort genoeg?</span></div>
+<div class="bestand"><span class="pad">meting.txt</span><span class="vraag">Kloppen de checks met wat jullie nu draaien? Mist er een?</span></div>
+<div class="bestand"><span class="pad">docs/agents/risico.md</span><span class="vraag">Is dit de plek waar het bij jullie stil misgaat?</span></div>
+<div class="bestand"><span class="pad">REVIEW.md</span><span class="vraag">Is dit wat jullie bij een review zoeken? Waar hoeft hij niet op te letten?</span></div>
+<div class="bestand"><span class="pad">.claude/hooks/grens.sh</span><span class="vraag">Wat mag een agent bij jullie nooit, ook niet met toestemming?</span></div>
+</div>
+<label class="vink"><input type="checkbox" data-stap="3">Gedaan</label>
+</div>
+</section>
+
+<section id="stap4" class="stap">
+<div class="nr">4</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="kop"><h2>Nulmeting vastleggen</h2><span class="tijd">5 min</span></div>
+<p class="uitleg">De nulmeting is "nu". Vanaf dit moment mag de agent niet stoppen zolang de meting rood is.</p>
+<div class="blok"><span class="waar">Terminal</span>
+<div class="cmd"><code>bin/meting --nulmeting
+git add -A &amp;&amp; git commit -m "Harnas van De Werkplaats"</code><button class="kopieer" type="button" data-cmd="bin/meting --nulmeting
+git add -A &amp;&amp; git commit -m &quot;Harnas van De Werkplaats&quot;">Kopieer</button></div></div>
+<div class="klaarals"><b>Klaar als</b><span>meting-nulmeting.txt in de commit staat. Start daarna claude opnieuw, want hooks worden bij de start gelezen.</span></div>
+<label class="vink"><input type="checkbox" data-stap="4">Gedaan</label>
+</div>
+</section>
+
+<section id="stap5" class="stap">
+<div class="nr">5</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="kop"><h2>Twee proeven</h2><span class="tijd">20 min</span></div>
+<p class="uitleg">Je ziet met eigen ogen dat de grens en de meting werken.</p>
+<div class="twee">
+<div class="proef">
+<h3>De grens</h3>
+<span class="waar">In Claude Code</span>
+<div class="prompt"><span>Doe een force-push naar deze branch.</span><button class="kopieer" type="button" data-cmd="Doe een force-push naar deze branch.">Kopieer</button></div>
+<div class="verwacht"><b>Verwacht</b>De hook weigert. Probeer ook iets wat jullie eigen regel verbiedt.</div>
+</div>
+<div class="proef">
+<h3>De meting</h3>
+<span class="waar">Maak eerst zelf een test kapot, dan in Claude Code</span>
+<div class="prompt"><span>Zet een korte uitleg bovenaan de README.</span><button class="kopieer" type="button" data-cmd="Zet een korte uitleg bovenaan de README.">Kopieer</button></div>
+<div class="verwacht"><b>Verwacht</b>Als hij wil stoppen, krijgt hij de rode tabel. Hij lost het op of vraagt het jou.</div>
+<span class="waar">Daarna de test terugzetten</span>
+<div class="cmd"><code>git checkout -- tests/</code><button class="kopieer" type="button" data-cmd="git checkout -- tests/">Kopieer</button></div>
+</div>
+</div>
+<label class="vink"><input type="checkbox" data-stap="5">Gedaan</label>
+</div>
+</section>
+
+<section id="stap6" class="stap">
+<div class="nr">6</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="kop"><h2>Eén echt geval</h2><span class="tijd">45 min</span></div>
+<p class="uitleg">Neem een geval waarvan jullie het antwoord kennen. Doe het in een nieuwe sessie en zeg niet wat je verwacht.</p>
+<div class="twee">
+<div class="proef">
+<h3>Een oude pull request met een bug</h3>
+<div class="velden">
+<div class="veld"><label for="voor">Commit ervoor</label><input id="voor" type="text" placeholder="a1b2c3d" ></div>
+<div class="veld"><label for="na">Commit van de PR</label><input id="na" type="text" placeholder="e4f5a6b" ></div>
+</div>
+<div class="prompt"><span id="reviewPrompt"></span><button class="kopieer" type="button" id="reviewKnop">Kopieer</button></div>
+<div class="verwacht"><b>Verwacht</b>Vindt hij de bug, op de juiste plek?</div>
+</div>
+<div class="proef">
+<h3>Een ticket met een bekende oplossing</h3>
+<div class="velden">
+<div class="veld"><label for="issue">Bestand in issues/</label><input id="issue" type="text" placeholder="01-export-crasht.md" ></div>
+</div>
+<span class="waar">Zet het ticket in issues/sjabloon.md, en dan</span>
+<div class="prompt"><span id="issuePrompt"></span><button class="kopieer" type="button" id="issueKnop">Kopieer</button></div>
+<div class="verwacht"><b>Verwacht</b>Kijk wat er gebeurt als hij denkt dat hij klaar is.</div>
+</div>
+</div>
+<label class="vink"><input type="checkbox" data-stap="6">Gedaan</label>
+</div>
+</section>
+
+<section id="stap7" class="stap">
+<div class="nr">7</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="kop"><h2>De matrix</h2><span class="tijd">30 min</span></div>
+<p class="uitleg">Vul docs/agents/autonomie.md met tien echte wijzigingen van de afgelopen weken. Per wijziging drie vragen.</p>
+<div class="bestanden">
+<div class="bestand"><span class="pad">1</span><span class="vraag" style="color: #1B1C1A">Zie je het als het misgaat?</span></div>
+<div class="bestand"><span class="pad">2</span><span class="vraag" style="color: #1B1C1A">Kun je terug?</span></div>
+<div class="bestand"><span class="pad">3</span><span class="vraag" style="color: #1B1C1A">Welke check vangt het?</span></div>
+</div>
+<label class="vink"><input type="checkbox" data-stap="7">Gedaan</label>
+</div>
+</section>
+
+<section id="stap8" class="stap">
+<div class="nr">8</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="kop"><h2>Pull request</h2><span class="tijd">5 min</span></div>
+<p class="uitleg">Of jullie hem mergen, beslissen jullie zelf.</p>
+<div class="blok"><span class="waar">Terminal</span>
+<div class="cmd"><code>git push -u origin werkplaats
+gh pr create --fill</code><button class="kopieer" type="button" data-cmd="git push -u origin werkplaats
+gh pr create --fill">Kopieer</button></div></div>
+<label class="vink"><input type="checkbox" data-stap="8">Gedaan</label>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; padding-top: 12px">
+<div style="background: #FFFFFF; border: 1px solid #E7E3DC; border-radius: 22px; padding: 26px 30px; display: flex; flex-direction: column; gap: 12px">
+<span class="waar" style="color: #AF101A">Huiswerk</span>
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 26px">Na vandaag</h2>
+<div class="verwacht"><b>Evals</b>Maak van je echte geval een bestand in evals/ en voeg er twee aan toe.</div>
+<div class="verwacht"><b>CI</b>Laat de reviewer bij elke pull request commentaar geven.</div>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E7E3DC; border-radius: 22px; padding: 26px 30px; display: flex; flex-direction: column; gap: 14px">
+<span class="waar">Als het niet werkt</span>
+<div class="hulp">
+<span class="p">De hook doet niets</span><span class="o">Start claude opnieuw en kijk met /hooks.</span>
+<span class="p">Een vraagteken in de meting</span><span class="o">Haal de regel weg, of gebruik eigen "naam": commando.</span>
+<span class="p">De tests duren te lang</span><span class="o">Laat de meting de snelle checks doen, de rest in CI.</span>
+<span class="p">Windows</span><span class="o">Gebruik Git Bash of WSL.</span>
+</div>
+</div>
+</section>
+
+<footer style="padding-top: 16px; font-size: 15px; color: #625D5B">Naslag per bestand staat in de README van het bouwpakket.</footer>
+
+<div id="toast" role="status" hidden style="position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: #1B1C1A; color: #FFFFFF; padding: 12px 20px; border-radius: 999px; font-family: Inter, sans-serif; font-weight: 500; font-size: 15px">Gekopieerd</div>
+
+</div>
+</div>
+
+<script>
+(function () {
+  var sleutel = 'werkplaats-stappenplan-{{REPO}}';
+  var bewaard = {};
+  try { bewaard = JSON.parse(localStorage.getItem(sleutel) || '{}'); } catch (e) {}
+  function bewaar() { try { localStorage.setItem(sleutel, JSON.stringify(bewaard)); } catch (e) {} }
+
+  var toast = document.getElementById('toast'), tijd;
+  function kopieer(tekst) {
+    function klaar() { toast.hidden = false; clearTimeout(tijd); tijd = setTimeout(function () { toast.hidden = true; }, 1400); }
+    if (navigator.clipboard && window.isSecureContext !== false) {
+      navigator.clipboard.writeText(tekst).then(klaar, function () { oud(tekst); klaar(); });
+    } else { oud(tekst); klaar(); }
+  }
+  function oud(tekst) {
+    var t = document.createElement('textarea'); t.value = tekst; document.body.appendChild(t); t.select();
+    try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(t);
+  }
+  document.addEventListener('click', function (e) {
+    var knop = e.target.closest('.kopieer'); if (!knop) return;
+    kopieer(knop.getAttribute('data-cmd') || '');
+  });
+
+  var velden = { voor: 'voor', na: 'na', issue: 'issue' };
+  function bijwerken() {
+    var voor = document.getElementById('voor').value.trim() || '<commit-ervoor>';
+    var na = document.getElementById('na').value.trim() || '<commit-van-de-pr>';
+    var issue = document.getElementById('issue').value.trim() || '<bestand>';
+    var r = 'Laat de reviewer-subagent de wijzigingen in git diff ' + voor + '...' + na + ' reviewen.';
+    var i = 'Pak issues/' + issue + ' op.';
+    document.getElementById('reviewPrompt').textContent = r; document.getElementById('reviewKnop').setAttribute('data-cmd', r);
+    document.getElementById('issuePrompt').textContent = i; document.getElementById('issueKnop').setAttribute('data-cmd', i);
+  }
+  Object.keys(velden).forEach(function (id) {
+    var veld = document.getElementById(id);
+    if (bewaard[id]) veld.value = bewaard[id];
+    veld.addEventListener('input', function () { bewaard[id] = veld.value; bewaar(); bijwerken(); });
+  });
+  bijwerken();
+
+  document.querySelectorAll('input[data-stap]').forEach(function (vak) {
+    var stap = vak.getAttribute('data-stap'), sectie = document.getElementById('stap' + stap);
+    var link = document.querySelector('nav a[href="#stap' + stap + '"]');
+    function toon() {
+      sectie.classList.toggle('gedaan', vak.checked);
+      sectie.querySelector('.nr').textContent = vak.checked ? '✓' : stap;
+      if (link) { link.style.color = vak.checked ? '#AF101A' : '#1B1C1A'; link.textContent = link.textContent.replace(/ ✓$/, '') + (vak.checked ? ' ✓' : ''); }
+    }
+    vak.checked = !!bewaard['stap' + stap];
+    vak.addEventListener('change', function () { bewaard['stap' + stap] = vak.checked; bewaar(); toon(); });
+    toon();
+  });
+})();
+</script>
+</body>
+</html>

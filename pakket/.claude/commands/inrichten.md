@@ -4,7 +4,7 @@ description: Richt de harness van De Werkplaats in deze repo in. Schrijft concep
 
 Je richt de harness van De Werkplaats in voor deze repository. Je schrijft concepten. Het team beoordeelt ze daarna, dus leg bij elke keuze kort uit waarom je hem maakte.
 
-De sjablonen van het bouwpakket staan in `{{PAKKET}}`. Lees die eerst. Wat al in deze repo stond, blijft staan: je vult aan en voegt samen, je vervangt niets en je verwijdert niets.
+De sjablonen van het bouwpakket staan in `{{PAKKET}}`. Lees die eerst. Wat al in deze repo stond, blijft staan: je vult aan en voegt samen, je vervangt niets en je verwijdert niets. `docs/agents/stappenplan.html` is voor de mens: laat dat bestand staan zoals het is.
 
 ## 1. Lees de repo
 
