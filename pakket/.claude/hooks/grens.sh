@@ -5,6 +5,7 @@
 
 regels=(
   'git push.*(--force|-f([^a-zA-Z]|$)|--force-with-lease)|geen force-push'
+  'git push[^"]*[ :](main|master|develop)([^a-zA-Z0-9_/.-]|$)|geen push naar main, master of develop, dat doet een mens'
   'git reset --hard|geen git reset --hard'
   'artisan (migrate|db:wipe|db:seed)|geen migraties of databasewijzigingen, dat doet een mens'
   'rm -[a-zA-Z]*r[a-zA-Z]* +(/|~|\.\.)|geen rm buiten de werkmap'
@@ -24,5 +25,15 @@ for regel in "${regels[@]}"; do
     exit 2
   fi
 done
+
+# Ook een gewone push vanaf main, master of develop is aan de mens.
+if echo "$invoer" | grep -Eq 'git push'; then
+  tak="$(git -C "${CLAUDE_PROJECT_DIR:-.}" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+  case "$tak" in
+    main|master|develop)
+      echo "Geweigerd door de grens-hook: geen push vanaf $tak, dat doet een mens. Meld dit aan de mens en zoek geen omweg." >&2
+      exit 2 ;;
+  esac
+fi
 
 exit 0

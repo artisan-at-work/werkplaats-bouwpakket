@@ -126,7 +126,10 @@ meet() {
       [ -n "$basis" ] || { echo 0; return; }
       local gewijzigd
       gewijzigd="$( (git diff --name-only "$basis"; git ls-files --others --exclude-standard) 2>/dev/null)"
-      if echo "$gewijzigd" | grep -q '^tests/' && ! echo "$gewijzigd" | grep -q "^$code_map/"; then echo 1; else echo 0; fi ;;
+      # Code is alles buiten tests/, behalve het harnas zelf en documentatie.
+      local code
+      code="$(echo "$gewijzigd" | grep -v '^tests/' | grep -Ev '^(\.claude/|\.werkplaats/|docs/|evals/|issues/|bin/meting$|meting|.*\.md$)')"
+      if echo "$gewijzigd" | grep -q '^tests/' && [ -z "$code" ]; then echo 1; else echo 0; fi ;;
     telling\ *)
       # telling "tekst"            telt hoe vaak de tekst voorkomt in app/ (of src/)
       # telling "tekst" in map/    telt in die map
@@ -178,7 +181,7 @@ while IFS= read -r regel || [ -n "$regel" ]; do
   nu="$(nulwaarde "$label")"
   status="ok"
   case "$grens" in
-    "altijd 0") toon="altijd 0"; [ "$waarde" = "0" ] || status="ROOD" ;;
+    "altijd 0") toon="altijd 0"; [ "$waarde" = "0" ] || { status="ROOD"; echo "$label ($waarde)" >> "$TMP/nu-al-rood"; } ;;
     "niet meer dan nu")
       if [ -z "$nu" ]; then toon="nog geen nulmeting"; status="-"
       else toon="hoogstens $nu"; { [ "$waarde" -le "$nu" ] 2>/dev/null || status="ROOD"; }; fi ;;
@@ -196,6 +199,12 @@ if [ "$modus" = "nulmeting" ]; then
   echo "Nulmeting vastgelegd in $NUL:"
   cat "$NUL"
   echo
+  if [ -s "$TMP/nu-al-rood" ]; then
+    echo "Let op: deze regels staan op \"altijd 0\" maar zijn nu al niet 0."
+    echo "Daardoor kan de agent nooit klaar zijn. Los het eerst op, of zet de grens op \"niet meer dan nu\":"
+    sed 's/^/  /' "$TMP/nu-al-rood"
+    echo
+  fi
   echo "Commit dit bestand. Alleen zo verandert \"nu\"."
   exit 0
 fi

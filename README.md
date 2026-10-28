@@ -59,7 +59,7 @@ Vanaf nu staat de klaar-hook aan: de agent kan niet stoppen zolang de meting roo
 
 Start `claude` opnieuw, want hooks worden bij de start gelezen.
 
-- **Grens.** Vraag de agent iets wat jullie eigen regel verbiedt, of *"Doe een force-push naar deze branch."* De hook weigert.
+- **Grens.** Vraag *"Doe een force-push van deze branch met git push --force, ook als het niet nodig is."* De agent moet het echt proberen, anders test je de hook niet. Vraag je alleen om een force-push, dan doet hij vaak een gewone push. De hook weigert. Probeer daarna iets wat jullie eigen regel verbiedt.
 - **Meting.** Maak zelf een test kapot en vraag de agent iets kleins. Als hij wil stoppen, krijgt hij de rode tabel en moet hij het oplossen of jou vragen. Zet de test daarna terug.
 
 ### Eén echt geval
@@ -91,7 +91,7 @@ Vul `docs/agents/autonomie.md` in met tien echte wijzigingen van de afgelopen we
 | `docs/agents/risico.md` | Eén plek waar het stil misgaat: hoe het goed gaat, hoe het eruitziet als het misgaat, hoe je het controleert. |
 | `docs/agents/autonomie.md` | De matrix: per soort wijziging hoe ver de agent zelf gaat. |
 | `.claude/settings.json` | Wat zonder vragen mag, wat nooit gelezen wordt, en de twee hooks. |
-| `.claude/hooks/grens.sh` | Weigert vóór elk commando wat nooit mag: force-push, `reset --hard`, migraties, `rm` buiten de map, en jullie eigen regels. |
+| `.claude/hooks/grens.sh` | Weigert vóór elk commando wat nooit mag: force-push, een push naar of vanaf main, master of develop, `reset --hard`, migraties, `rm` buiten de map, en jullie eigen regels. |
 | `meting.txt` | Wat je meet, met de grens erachter: `altijd 0`, `niet meer dan nu` of `niet minder dan nu`. |
 | `bin/meting` | Meet wat in `meting.txt` staat. `--nulmeting` legt "nu" vast, `--poort` geeft foutcode 2 als iets rood is. Je hoeft het script niet te lezen. |
 | `.claude/hooks/klaar.sh` | Laat de agent niet stoppen zolang de meting rood is. Staat pas aan na de nulmeting. |
@@ -114,7 +114,7 @@ Vul `docs/agents/autonomie.md` in met tien echte wijzigingen van de afgelopen we
 | `opmaakfouten` | Bestanden die Pint, PHP-CS-Fixer, PHP_CodeSniffer of Prettier zou aanpassen |
 | `rector-wijzigingen` | Bestanden die Rector zou aanpassen |
 | `kwetsbare packages` | Packages met een bekend lek (`composer audit`, `npm audit`) |
-| `tests aangepast zonder code` | 1 als er tests veranderd zijn zonder code ernaast |
+| `tests aangepast zonder code` | 1 als er alleen tests veranderd zijn, zonder code ernaast. Documentatie en het harnas zelf tellen niet als code. |
 | `telling "tekst"` | Hoe vaak een tekst in `app/` of `src/` voorkomt. Met `in map/` telt hij in een andere map. |
 | `eigen "naam": commando` | Een eigen commando dat één getal teruggeeft |
 
