@@ -1,0 +1,13 @@
+# Voorbeeld voor een JavaScript- of TypeScript-repo.
+# Bij deze stack ziet bin/meting alleen of npm test slaagt (0) of faalt (1).
+
+gefaalde tests                     altijd 0
+opmaakfouten                       niet meer dan nu
+kwetsbare packages                 altijd 0
+
+# Eigen risico's: patronen die niet mogen groeien.
+telling "v-html" in src            niet meer dan nu
+telling "innerHTML" in src         niet meer dan nu
+
+# Een eigen commando dat één getal geeft:
+eigen "typefouten": npx tsc --noEmit | grep -c "error TS"    niet meer dan nu

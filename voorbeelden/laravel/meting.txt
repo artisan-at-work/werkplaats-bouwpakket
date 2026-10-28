@@ -1,0 +1,14 @@
+# Voorbeeld voor een Laravel-repo.
+
+gefaalde tests                     altijd 0
+overgeslagen tests                 altijd 0
+aantal tests                       niet minder dan nu
+phpstan-fouten                     niet meer dan nu
+regels in de phpstan-baseline      niet meer dan nu
+opmaakfouten                       niet meer dan nu
+kwetsbare packages                 altijd 0
+
+# Eigen risico's: patronen die niet mogen groeien.
+telling "$guarded = []"            niet meer dan nu
+telling "whereRaw("                niet meer dan nu
+telling "{!!" in resources/views   niet meer dan nu

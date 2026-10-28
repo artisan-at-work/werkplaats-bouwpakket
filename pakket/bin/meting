@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+# bin/meting: zet de kwaliteit van de repo in een paar vaste cijfers.
+#
+#   bin/meting              de tabel
+#   bin/meting --nulmeting  leg de huidige cijfers vast als "nu" (doe dit op de hoofdbranch)
+#   bin/meting --poort      foutcode 2 als een regel rood is (gebruikt door de Stop-hook)
+#
+# Wat er gemeten wordt, staat in meting.txt. Dit script hoef je niet te lezen of aan te passen.
+
+# (geen set -u: macOS heeft een oude bash)
+cd "$(dirname "$0")/.." || exit 1
+
+CONF="meting.txt"
+NUL="meting-nulmeting.txt"
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+modus="tabel"
+case "${1:-}" in
+  --nulmeting) modus="nulmeting" ;;
+  --poort) modus="poort" ;;
+  "") ;;
+  *) echo "Onbekende optie: $1. Gebruik --nulmeting of --poort." >&2; exit 1 ;;
+esac
+
+if [ ! -f "$CONF" ]; then
+  echo "meting.txt ontbreekt. Kopieer het voorbeeld uit het bouwpakket." >&2
+  exit 1
+fi
+
+# --- welke stack ---------------------------------------------------------
+
+if [ -f artisan ] || [ -f composer.json ]; then
+  stack="php"
+elif [ -f package.json ]; then
+  stack="node"
+else
+  stack="onbekend"
+fi
+
+code_map="app"
+[ -d "$code_map" ] || code_map="src"
+[ -d "$code_map" ] || code_map="."
+
+# --- de meters -----------------------------------------------------------
+
+draai_tests() {
+  # Eén keer per meting, de rest leest het rapport.
+  [ -f "$TMP/tests.done" ] && return
+  touch "$TMP/tests.done"
+  local junit="$TMP/junit.xml"
+  if [ "$stack" = "php" ]; then
+    if [ -x vendor/bin/pest ]; then
+      vendor/bin/pest --colors=never --log-junit "$junit" >/dev/null 2>&1
+    elif [ -x vendor/bin/phpunit ]; then
+      vendor/bin/phpunit --colors=never --log-junit "$junit" >/dev/null 2>&1
+    else
+      php artisan test --log-junit "$junit" >/dev/null 2>&1
+    fi
+  elif [ "$stack" = "node" ]; then
+    if npm test >/dev/null 2>&1; then echo 0 > "$TMP/node-failed"; else echo 1 > "$TMP/node-failed"; fi
+    return
+  fi
+  if [ -s "$junit" ]; then
+    local kop
+    kop="$(grep -m1 -o '<testsuite [^>]*>' "$junit")"
+    attr() { echo "$kop" | grep -o "$1=\"[0-9]*\"" | grep -o '[0-9]*' || echo 0; }
+    local tests failures errors skipped
+    tests="$(attr tests)"; failures="$(attr failures)"; errors="$(attr errors)"; skipped="$(attr skipped)"
+    echo $((failures + errors)) > "$TMP/failed"
+    echo "$skipped" > "$TMP/skipped"
+    echo $((tests - failures - errors - skipped)) > "$TMP/passed"
+  else
+    # Geen rapport betekent dat de testrun zelf crashte: dat telt als rood.
+    echo 1 > "$TMP/failed"; echo 0 > "$TMP/skipped"; echo 0 > "$TMP/passed"
+  fi
+}
+
+meet() {
+  local naam="$1"
+  case "$naam" in
+    "gefaalde tests")
+      draai_tests
+      if [ "$stack" = "node" ]; then cat "$TMP/node-failed"; else cat "$TMP/failed"; fi ;;
+    "overgeslagen tests")
+      draai_tests; cat "$TMP/skipped" 2>/dev/null || echo 0 ;;
+    "aantal tests")
+      draai_tests; cat "$TMP/passed" 2>/dev/null || echo 0 ;;
+    "phpstan-fouten")
+      [ -x vendor/bin/phpstan ] || { echo "?"; return; }
+      local uit
+      uit="$(vendor/bin/phpstan analyse --error-format=json --no-progress --memory-limit=1G 2>/dev/null)"
+      local e f
+      e="$(echo "$uit" | grep -o '"errors":[0-9]*' | head -1 | grep -o '[0-9]*')"
+      f="$(echo "$uit" | grep -o '"file_errors":[0-9]*' | head -1 | grep -o '[0-9]*')"
+      echo $(( ${e:-0} + ${f:-0} )) ;;
+    "regels in de phpstan-baseline")
+      if [ -f phpstan-baseline.neon ]; then grep -c 'message:' phpstan-baseline.neon; else echo 0; fi ;;
+    "opmaakfouten")
+      if [ -x vendor/bin/pint ]; then
+        vendor/bin/pint --test --format=json 2>/dev/null | grep -o '"path":' | wc -l | tr -d ' '
+      elif [ "$stack" = "node" ] && [ -f node_modules/.bin/prettier ]; then
+        node_modules/.bin/prettier --list-different . 2>/dev/null | wc -l | tr -d ' '
+      else
+        echo "?"
+      fi ;;
+    "kwetsbare packages")
+      if [ "$stack" = "php" ] && command -v composer >/dev/null; then
+        composer audit --format=json --no-interaction 2>/dev/null | grep -o '"advisoryId"' | wc -l | tr -d ' '
+      elif [ "$stack" = "node" ]; then
+        npm audit --audit-level=high --json 2>/dev/null | grep -o '"severity": *"\(high\|critical\)"' | wc -l | tr -d ' '
+      else
+        echo "?"
+      fi ;;
+    "tests aangepast zonder code")
+      local basis
+      basis="$(git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null || git merge-base HEAD develop 2>/dev/null)"
+      [ -n "$basis" ] || { echo 0; return; }
+      local gewijzigd
+      gewijzigd="$( (git diff --name-only "$basis"; git ls-files --others --exclude-standard) 2>/dev/null)"
+      if echo "$gewijzigd" | grep -q '^tests/' && ! echo "$gewijzigd" | grep -q "^$code_map/"; then echo 1; else echo 0; fi ;;
+    telling\ *)
+      # telling "tekst"            telt hoe vaak de tekst voorkomt in app/ (of src/)
+      # telling "tekst" in map/    telt in die map
+      local zoek map
+      zoek="$(echo "$naam" | sed -n 's/^telling "\(.*\)".*/\1/p')"
+      map="$(echo "$naam" | sed -n 's/^telling ".*" in \(.*\)$/\1/p')"
+      [ -n "$map" ] || map="$code_map"
+      grep -rF -o -- "$zoek" "$map" 2>/dev/null | wc -l | tr -d ' ' ;;
+    eigen\ *)
+      # eigen "naam": commando dat één getal teruggeeft
+      local cmd
+      cmd="$(echo "$naam" | sed -n 's/^eigen "[^"]*": *//p')"
+      bash -c "$cmd" 2>/dev/null | tail -1 | grep -o '[0-9]*' | head -1 ;;
+    *)
+      echo "onbekend" ;;
+  esac
+}
+
+nulwaarde() {
+  [ -f "$NUL" ] || { echo ""; return; }
+  grep -F -- "$1 = " "$NUL" | head -1 | sed 's/.* = //'
+}
+
+# --- meten -----------------------------------------------------------------
+
+rood=0
+regels=()
+: > "$TMP/nulmeting"
+
+while IFS= read -r regel || [ -n "$regel" ]; do
+  regel="$(echo "$regel" | sed 's/[[:space:]]*$//')"
+  [ -z "$regel" ] && continue
+  case "$regel" in \#*) continue ;; esac
+
+  grens=""
+  for g in "altijd 0" "niet meer dan nu" "niet minder dan nu"; do
+    case "$regel" in *"$g") grens="$g" ;; esac
+  done
+  if [ -z "$grens" ]; then
+    echo "Regel zonder grens in meting.txt: '$regel'. Eindig met: altijd 0, niet meer dan nu, of niet minder dan nu." >&2
+    exit 1
+  fi
+  naam="$(echo "${regel%"$grens"}" | sed 's/[[:space:]]*$//')"
+  label="$(echo "$naam" | sed 's/^telling "\(.*\)".*/telling \1/; s/^eigen "\([^"]*\)":.*/\1/')"
+
+  waarde="$(meet "$naam")"
+  echo "$label = $waarde" >> "$TMP/nulmeting"
+
+  nu="$(nulwaarde "$label")"
+  status="ok"
+  case "$grens" in
+    "altijd 0") toon="altijd 0"; [ "$waarde" = "0" ] || status="ROOD" ;;
+    "niet meer dan nu")
+      if [ -z "$nu" ]; then toon="nog geen nulmeting"; status="-"
+      else toon="hoogstens $nu"; { [ "$waarde" -le "$nu" ] 2>/dev/null || status="ROOD"; }; fi ;;
+    "niet minder dan nu")
+      if [ -z "$nu" ]; then toon="nog geen nulmeting"; status="-"
+      else toon="minstens $nu"; { [ "$waarde" -ge "$nu" ] 2>/dev/null || status="ROOD"; }; fi ;;
+  esac
+  case "$waarde" in ""|"?"|onbekend) status="?"; waarde="?" ;; esac
+  [ "$status" = "ROOD" ] && rood=$((rood + 1))
+  regels+=("$(printf '%-34s %-8s %-22s %s' "$label" "$waarde" "$toon" "$status")")
+done < "$CONF"
+
+if [ "$modus" = "nulmeting" ]; then
+  cp "$TMP/nulmeting" "$NUL"
+  echo "Nulmeting vastgelegd in $NUL:"
+  cat "$NUL"
+  echo
+  echo "Commit dit bestand. Alleen zo verandert \"nu\"."
+  exit 0
+fi
+
+uitvoer="$(printf '%-34s %-8s %-22s %s\n' "Meting" "Waarde" "Grens" ""; printf '%s\n' "${regels[@]}")"
+if [ "$rood" -gt 0 ]; then
+  uitvoer="$uitvoer"$'\n\n'"Niet klaar: $rood regel(s) rood."
+else
+  uitvoer="$uitvoer"$'\n\n'"Alles binnen de grens."
+fi
+
+if [ "$modus" = "poort" ] && [ "$rood" -gt 0 ]; then
+  echo "$uitvoer" >&2
+  exit 2
+fi
+echo "$uitvoer"
+exit 0
