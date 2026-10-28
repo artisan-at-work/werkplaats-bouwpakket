@@ -2,11 +2,10 @@
 
 De harness uit De Werkplaats, om in je eigen repo te zetten. Er zit geen app in en geen nieuwe agent: die heb je al, dat is Claude Code. Wat hier staat, bepaalt wat de agent weet, wat hij nooit mag, wanneer hij klaar is en wie zijn werk nakijkt.
 
-Deze README heeft drie delen:
+Deze README heeft twee delen:
 
-1. **In je eigen repo.** Installeren, de agent een eerste versie laten schrijven, beoordelen en testen. Dit doen we vrijdagmiddag.
-2. **Oefenen.** Alles zelf invullen in [werkplaats-oefenrepo](https://github.com/artisan-at-work/werkplaats-oefenrepo), voor wie het helemaal wil snappen.
-3. **Naslag.** Per bestand wat het doet, en waar de ingevulde voorbeelden staan.
+1. **In je eigen repo.** Installeren, de agent een eerste versie laten schrijven, beoordelen en testen.
+2. **Naslag.** Per bestand wat het doet, en voorbeelden van een ingevulde meting.
 
 ---
 
@@ -24,8 +23,6 @@ curl -fsSL https://raw.githubusercontent.com/artisan-at-work/werkplaats-bouwpakk
 Het script haalt het bouwpakket op naar `.werkplaats/`, een map die git negeert. Je hoeft dus niets te clonen. Het zet alleen bestanden neer die er nog niet zijn, en opent daarna het stappenplan (`docs/agents/stappenplan.html`) in je browser. Daarin staan alle stappen hieronder, met commando's die je kunt kopiëren.
 
 Had je al een `CLAUDE.md`, `AGENTS.md` of `.claude/settings.json`, dan blijven die staan en zegt het script dat.
-
-Heb je het bouwpakket wel naast je repo staan, dan kan het ook zo: `../werkplaats-bouwpakket/installeer`.
 
 ### De agent schrijft de eerste versie
 
@@ -85,35 +82,7 @@ Vul `docs/agents/autonomie.md` in met tien echte wijzigingen van de afgelopen we
 
 ---
 
-## 2. Oefenen
-
-In [werkplaats-oefenrepo](https://github.com/artisan-at-work/werkplaats-oefenrepo) staat een kleine Laravel-app zonder harness, met drie oude pull requests en een ticket waarvan het antwoord bekend is. Daar vul je alles zelf in, zonder `/inrichten`. Zo zie je wat elk bestand doet.
-
-```
-git clone https://github.com/artisan-at-work/werkplaats-oefenrepo
-cd werkplaats-oefenrepo
-composer install && cp .env.example .env && php artisan key:generate
-vendor/bin/pest
-git switch -c werkplaats
-../werkplaats-bouwpakket/installeer
-```
-
-Vul de bestanden zelf in, in de volgorde van de tabel hieronder. De ingevulde versies staan in `voorbeelden/oefenrepo/`. Kijk daar pas als je het zelf hebt geprobeerd.
-
-| Stap | Bestand | Proef |
-| --- | --- | --- |
-| 1 | `AGENTS.md`, `docs/agents/risico.md` | Vraag *"Wat moet ik weten voordat ik in deze repo werk?"* |
-| 2 | `.claude/hooks/grens.sh` | Vraag *"Voeg het package spatie/laravel-csv toe."* |
-| 3 | `meting.txt`, dan `bin/meting --nulmeting` | Maak een test kapot en kijk wat de klaar-hook doet |
-| 4 | `REVIEW.md` en `evals/01` tot en met `03` | Laat de reviewer `git diff main...pr/14-query-opgeschoond` reviewen, en zo ook pr/17 en pr/18 |
-| 4 | `issues/04-export-crasht.md` en `evals/04` | Vraag *"Pak issues/04-export-crasht.md op."* |
-| Matrix | `docs/agents/autonomie.md` | Tien wijzigingen indelen |
-
-Een **issue** is de opdracht voor de agent. Een **eval** is voor jou: wat de agent krijgt en wat het goede antwoord is, zodat je kunt scoren en het later opnieuw kunt doen. De agent kan de map `evals/` niet lezen.
-
----
-
-## 3. Naslag
+## 2. Naslag
 
 | Bestand | Wat het doet |
 | --- | --- |
@@ -152,7 +121,6 @@ Een **issue** is de opdracht voor de agent. Een **eval** is voor jou: wat de age
 ### Voorbeelden
 
 - `voorbeelden/laravel/meting.txt` en `voorbeelden/node/meting.txt`
-- `voorbeelden/oefenrepo/`: alles ingevuld voor de oefenrepo, met de antwoorden van de evals
 
 ### Als het niet werkt
 

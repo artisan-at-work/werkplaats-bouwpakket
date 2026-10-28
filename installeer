@@ -3,9 +3,6 @@
 #
 # Zonder iets te downloaden, in de map van je applicatie:
 #   curl -fsSL https://raw.githubusercontent.com/artisan-at-work/werkplaats-bouwpakket/main/installeer | bash
-#
-# Met het bouwpakket naast je repo:
-#   ../werkplaats-bouwpakket/installeer
 
 BRON="artisan-at-work/werkplaats-bouwpakket"
 TAK="${WERKPLAATS_TAK:-main}"
@@ -21,7 +18,7 @@ if [ -n "$HIER" ] && [ -f "$HIER/installeer" ] && [ -f "$HIER/pakket/.claude/com
   # Het bouwpakket staat lokaal.
   PAKKET="$HIER/pakket"
   if [ "$(pwd)" = "$HIER" ]; then
-    echo "Je staat in het bouwpakket zelf. Ga naar je eigen repo, bijvoorbeeld: cd ../werkplaats-oefenrepo"
+    echo "Je staat in het bouwpakket zelf. Ga naar de map van je eigen applicatie."
     exit 1
   fi
 else

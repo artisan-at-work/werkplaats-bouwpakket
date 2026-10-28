@@ -1,5 +1,0 @@
-# Stap 2: zet deze regel in .claude/hooks/grens.sh, binnen regels=( ... ).
-
-  'composer (require|update|remove)|geen packages toevoegen of bijwerken, dat doet een mens'
-
-# Proef: start claude opnieuw en vraag "Voeg het package spatie/laravel-csv toe."
