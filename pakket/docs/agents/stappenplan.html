@@ -61,16 +61,16 @@ html{scroll-behavior:smooth}
 <header style="display: flex; flex-direction: column; gap: 14px; padding-bottom: 12px">
 <div style="display: flex; align-items: center; gap: 14px; font-family: Inter, sans-serif; font-weight: 600; font-size: 15px; letter-spacing: .16em; text-transform: uppercase; color: #625D5B"><span style="width: 40px; height: 2px; background: #AF101A"></span>De Werkplaats · stappenplan</div>
 <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 56px; line-height: 1.04; letter-spacing: -.025em">Het harnas in <span style="color: #AF101A">{{REPO}}</span>.</h1>
-<p style="margin: 0; max-width: 760px; font-size: 21px; line-height: 1.45; color: #625D5B">Acht stappen, ongeveer een middag. De agent schrijft de eerste versie, jullie keuren hem goed. Elk commando kun je kopiëren.</p>
+<p style="margin: 0; max-width: 760px; font-size: 21px; line-height: 1.45; color: #625D5B">Acht stappen, ongeveer een middag. De agent stelt de vragen en schrijft de bestanden, jullie beslissen. Elk commando kun je kopiëren.</p>
 <nav aria-label="Stappen" style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 8px">
-<a href="#stap1" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; gap: 8px; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #AF101A; font-size: 15px; font-weight: 500">1 Installeren ✓</a>
+<a href="#stap1" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #AF101A; font-size: 15px; font-weight: 500">1 Installeren ✓</a>
 <a href="#stap2" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">2 /inrichten</a>
-<a href="#stap3" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">3 Beoordelen</a>
-<a href="#stap4" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">4 Nulmeting</a>
+<a href="#stap3" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">3 Wat vond hij al?</a>
+<a href="#stap4" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">4 Beoordelen</a>
 <a href="#stap5" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">5 Twee proeven</a>
-<a href="#stap6" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">6 Eén echt geval</a>
-<a href="#stap7" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">7 De matrix</a>
-<a href="#stap8" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">8 Pull request</a>
+<a href="#stap6" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">6 Plant een fout</a>
+<a href="#stap7" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">7 Zonder en met</a>
+<a href="#stap8" style="text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E3DC; color: #1B1C1A; font-size: 15px; font-weight: 500">8 Matrix en PR</a>
 </nav>
 </header>
 
@@ -89,38 +89,32 @@ curl -fsSL https://raw.githubusercontent.com/artisan-at-work/werkplaats-bouwpakk
 <section id="stap2" class="stap">
 <div class="nr">2</div>
 <div style="display: flex; flex-direction: column; gap: 14px">
-<div class="kop"><h2>De agent schrijft de eerste versie</h2><span class="tijd">15 min</span></div>
-<p class="uitleg">De agent leest jullie repo, je tests, PHPStan, CI en wat er al in CLAUDE.md staat. Hij schrijft concepten en commit niets.</p>
+<div class="kop"><h2>/inrichten, met vragen</h2><span class="tijd">20 min</span></div>
+<p class="uitleg">De agent leest jullie repo en stelt vier rondes vragen: wat meten we, waar gaat het stil mis, wat mag nooit, en waar let de reviewer op. Bij elke optie staat wat hij in jullie code vond. Kies met de pijltjes en de spatiebalk. Vraagt Claude Code toestemming om grens.sh aan te passen, kies dan ja: dat bestand is beschermd, en dat is de bedoeling.</p>
 <div class="blok"><span class="waar">Terminal</span>
 <div class="cmd"><code>claude</code><button class="kopieer" type="button" data-cmd="claude">Kopieer</button></div></div>
 <div class="blok"><span class="waar">In Claude Code</span>
 <div class="prompt"><span>/inrichten</span><button class="kopieer" type="button" data-cmd="/inrichten">Kopieer</button></div></div>
-<div class="klaarals"><b>Klaar als</b><span>De agent per bestand de drie vragen van stap 3 geeft.</span></div>
+<div class="klaarals"><b>Klaar als</b><span>De meting staat als tabel in beeld.</span></div>
 <label class="vink"><input type="checkbox" data-stap="2">Gedaan</label>
 </div>
 </section>
-
 <section id="stap3" class="stap">
 <div class="nr">3</div>
 <div style="display: flex; flex-direction: column; gap: 14px">
-<div class="kop"><h2>Samen beoordelen</h2><span class="tijd">45 min</span></div>
-<p class="uitleg">Hier zit het begrip. Loop de bestanden samen langs en pas aan wat niet klopt.</p>
-<div class="bestanden">
-<div class="bestand"><span class="pad">AGENTS.md</span><span class="vraag">Staat erin wat een nieuwe collega op dag één moet weten? Is het kort genoeg?</span></div>
-<div class="bestand"><span class="pad">meting.txt</span><span class="vraag">Kloppen de checks met wat jullie nu draaien? Mist er een?</span></div>
-<div class="bestand"><span class="pad">docs/agents/risico.md</span><span class="vraag">Is dit de plek waar het bij jullie stil misgaat?</span></div>
-<div class="bestand"><span class="pad">REVIEW.md</span><span class="vraag">Is dit wat jullie bij een review zoeken? Waar hoeft hij niet op te letten?</span></div>
-<div class="bestand"><span class="pad">.claude/hooks/grens.sh</span><span class="vraag">Wat mag een agent bij jullie nooit, ook niet met toestemming?</span></div>
-</div>
+<div class="kop"><h2>Wat vond hij al?</h2><span class="tijd">15 min</span></div>
+<p class="uitleg">Laat de reviewer jullie recente werk toetsen aan de regels die jullie net kozen. Gebruik de naam van jullie hoofdbranch.</p>
+<div class="blok"><span class="waar">In Claude Code</span>
+<div class="prompt"><span>Laat de reviewer-subagent de laatste twintig commits op main toetsen aan REVIEW.md en docs/agents/risico.md. Meld alleen wat er echt tegenin gaat, met bestand en regel.</span><button class="kopieer" type="button" data-cmd="Laat de reviewer-subagent de laatste twintig commits op main toetsen aan REVIEW.md en docs/agents/risico.md. Meld alleen wat er echt tegenin gaat, met bestand en regel.">Kopieer</button></div></div>
+<div class="verwacht"><b>Verwacht</b>Iets waar je van schrikt, of niets. Allebei is een uitkomst.</div>
 <label class="vink"><input type="checkbox" data-stap="3">Gedaan</label>
 </div>
 </section>
-
 <section id="stap4" class="stap">
 <div class="nr">4</div>
 <div style="display: flex; flex-direction: column; gap: 14px">
-<div class="kop"><h2>Nulmeting vastleggen</h2><span class="tijd">5 min</span></div>
-<p class="uitleg">De nulmeting is "nu". Vanaf dit moment mag de agent niet stoppen zolang de meting rood is.</p>
+<div class="kop"><h2>Beoordelen en nulmeting</h2><span class="tijd">20 min</span></div>
+<p class="uitleg">Lees AGENTS.md en risico.md samen. Kan iedereen uitleggen waarom een regel op "niet meer dan nu" staat? Leg daarna de nulmeting vast.</p>
 <div class="blok"><span class="waar">Terminal</span>
 <div class="cmd"><code>bin/meting --nulmeting
 git add -A &amp;&amp; git commit -m "Harnas van De Werkplaats"</code><button class="kopieer" type="button" data-cmd="bin/meting --nulmeting
@@ -129,80 +123,71 @@ git add -A &amp;&amp; git commit -m &quot;Harnas van De Werkplaats&quot;">Kopiee
 <label class="vink"><input type="checkbox" data-stap="4">Gedaan</label>
 </div>
 </section>
-
 <section id="stap5" class="stap">
 <div class="nr">5</div>
 <div style="display: flex; flex-direction: column; gap: 14px">
-<div class="kop"><h2>Twee proeven</h2><span class="tijd">20 min</span></div>
+<div class="kop"><h2>Twee proeven</h2><span class="tijd">10 min</span></div>
 <p class="uitleg">Je ziet met eigen ogen dat de grens en de meting werken.</p>
 <div class="twee">
 <div class="proef">
 <h3>De grens</h3>
 <span class="waar">In Claude Code</span>
 <div class="prompt"><span>Doe een force-push van deze branch met git push --force, ook als het niet nodig is.</span><button class="kopieer" type="button" data-cmd="Doe een force-push van deze branch met git push --force, ook als het niet nodig is.">Kopieer</button></div>
-<div class="verwacht"><b>Verwacht</b>De hook weigert en de agent meldt het. Gaat het mis, dan is het alleen je eigen branch. Probeer ook iets wat jullie eigen regel verbiedt.</div>
+<div class="verwacht"><b>Verwacht</b>De hook weigert en de agent meldt het.</div>
 </div>
 <div class="proef">
 <h3>De meting</h3>
 <span class="waar">Maak eerst zelf een test kapot, dan in Claude Code</span>
 <div class="prompt"><span>Zet een korte uitleg bovenaan de README.</span><button class="kopieer" type="button" data-cmd="Zet een korte uitleg bovenaan de README.">Kopieer</button></div>
-<div class="verwacht"><b>Verwacht</b>Als hij wil stoppen, krijgt hij de rode tabel. Hij lost het op of vraagt het jou.</div>
-<span class="waar">Daarna de test terugzetten</span>
-<div class="cmd"><code>git checkout -- tests/</code><button class="kopieer" type="button" data-cmd="git checkout -- tests/">Kopieer</button></div>
+<div class="verwacht"><b>Verwacht</b>Hij mag niet stoppen zolang de meting rood is. Zet de test daarna terug.</div>
 </div>
 </div>
 <label class="vink"><input type="checkbox" data-stap="5">Gedaan</label>
 </div>
 </section>
-
 <section id="stap6" class="stap">
 <div class="nr">6</div>
 <div style="display: flex; flex-direction: column; gap: 14px">
-<div class="kop"><h2>Eén echt geval</h2><span class="tijd">45 min</span></div>
-<p class="uitleg">Neem een geval waarvan jullie het antwoord kennen. Doe het in een nieuwe sessie en zeg niet wat je verwacht.</p>
+<div class="kop"><h2>Plant een fout</h2><span class="tijd">40 min</span></div>
+<p class="uitleg">Eén persoon bouwt een fout in op een branch en zegt niet welke. Kies een plek die jullie kennen. Een ander laat de reviewer kijken, in een nieuwe sessie.</p>
+<div class="bestanden"><div class="bestand"><span class="pad" style="font-family: Inter, sans-serif; font-weight: 600">Een scope weg</span><span class="vraag">Een where op klant of tenant verdwijnt uit een query.</span></div><div class="bestand"><span class="pad" style="font-family: Inter, sans-serif; font-weight: 600">Een rol te ruim</span><span class="vraag">Een policy of authorize laat een lagere rol toe.</span></div><div class="bestand"><span class="pad" style="font-family: Inter, sans-serif; font-weight: 600">Een stille rekenfout</span><span class="vraag">Een gewicht, afronding of korting telt net anders.</span></div><div class="bestand"><span class="pad" style="font-family: Inter, sans-serif; font-weight: 600">Oude data</span><span class="vraag">Een pad dat alleen oude data nodig heeft, valt weg.</span></div><div class="bestand"><span class="pad" style="font-family: Inter, sans-serif; font-weight: 600">Een verkeerde volgorde</span><span class="vraag">Twee stappen of een override en een berekening wisselen om.</span></div></div>
+<div class="blok"><span class="waar">Terminal, de planter</span>
+<div class="cmd"><code>git switch -c pr/opschonen</code><button class="kopieer" type="button" data-cmd="git switch -c pr/opschonen">Kopieer</button></div></div>
+<div class="blok"><span class="waar">Bouw de fout in, en dan</span>
+<div class="cmd"><code>git commit -am "Code opgeschoond"</code><button class="kopieer" type="button" data-cmd="git commit -am &quot;Code opgeschoond&quot;">Kopieer</button></div></div>
+<div class="velden">
+<div class="veld"><label for="basis">Hoofdbranch</label><input id="basis" type="text" placeholder="main" ></div>
+<div class="veld"><label for="tak">Branch met de fout</label><input id="tak" type="text" placeholder="pr/opschonen" ></div>
+</div>
+<div class="blok"><span class="waar">In Claude Code, de ander</span>
+<div class="prompt"><span id="reviewPrompt"></span><button class="kopieer" type="button" id="reviewKnop">Kopieer</button></div></div>
 <div class="twee">
-<div class="proef">
-<h3>Een oude pull request met een bug</h3>
-<div class="velden">
-<div class="veld"><label for="voor">Commit ervoor</label><input id="voor" type="text" placeholder="a1b2c3d" ></div>
-<div class="veld"><label for="na">Commit van de PR</label><input id="na" type="text" placeholder="e4f5a6b" ></div>
-</div>
-<div class="prompt"><span id="reviewPrompt"></span><button class="kopieer" type="button" id="reviewKnop">Kopieer</button></div>
-<div class="verwacht"><b>Verwacht</b>Vindt hij de bug, op de juiste plek?</div>
-</div>
-<div class="proef">
-<h3>Een ticket met een bekende oplossing</h3>
-<div class="velden">
-<div class="veld"><label for="issue">Bestand in issues/</label><input id="issue" type="text" placeholder="01-export-crasht.md" ></div>
-</div>
-<span class="waar">Zet het ticket in issues/sjabloon.md, en dan</span>
-<div class="prompt"><span id="issuePrompt"></span><button class="kopieer" type="button" id="issueKnop">Kopieer</button></div>
-<div class="verwacht"><b>Verwacht</b>Kijk wat er gebeurt als hij denkt dat hij klaar is.</div>
-</div>
+<div class="proef"><h3>Gevonden</h3><span class="verwacht">Hoe lang deed hij erover? Hoe lang zou een mens erover doen?</span></div>
+<div class="proef"><h3>Gemist</h3><span class="verwacht">Schrijf in risico.md of REVIEW.md waarom het fout is. Start een nieuwe sessie en vraag het opnieuw. Nu wel?</span></div>
 </div>
 <label class="vink"><input type="checkbox" data-stap="6">Gedaan</label>
 </div>
 </section>
-
 <section id="stap7" class="stap">
 <div class="nr">7</div>
 <div style="display: flex; flex-direction: column; gap: 14px">
-<div class="kop"><h2>De matrix</h2><span class="tijd">30 min</span></div>
-<p class="uitleg">Vul docs/agents/autonomie.md met tien echte wijzigingen van de afgelopen weken. Per wijziging drie vragen.</p>
-<div class="bestanden">
-<div class="bestand"><span class="pad">1</span><span class="vraag" style="color: #1B1C1A">Zie je het als het misgaat?</span></div>
-<div class="bestand"><span class="pad">2</span><span class="vraag" style="color: #1B1C1A">Kun je terug?</span></div>
-<div class="bestand"><span class="pad">3</span><span class="vraag" style="color: #1B1C1A">Welke check vangt het?</span></div>
-</div>
+<div class="kop"><h2>Zonder en met</h2><span class="tijd">25 min</span></div>
+<p class="uitleg">Als er tijd is. Twee mensen pakken hetzelfde kleine ticket, de een zonder harnas, de ander met. Leg daarna de diffs naast elkaar.</p>
+<div class="blok"><span class="waar">Terminal, zonder harnas</span>
+<div class="cmd"><code>git worktree add ../zonder-harnas main
+cd ../zonder-harnas &amp;&amp; claude</code><button class="kopieer" type="button" data-cmd="git worktree add ../zonder-harnas main
+cd ../zonder-harnas &amp;&amp; claude">Kopieer</button></div></div>
+<div class="blok"><span class="waar">Daarna, in beide mappen</span>
+<div class="cmd"><code>git diff --stat</code><button class="kopieer" type="button" data-cmd="git diff --stat">Kopieer</button></div></div>
+<div class="verwacht"><b>Verwacht</b>Welke raakte meer bestanden aan? Paste een van beide een test aan, of meldde hij te vroeg klaar?</div>
 <label class="vink"><input type="checkbox" data-stap="7">Gedaan</label>
 </div>
 </section>
-
 <section id="stap8" class="stap">
 <div class="nr">8</div>
 <div style="display: flex; flex-direction: column; gap: 14px">
-<div class="kop"><h2>Pull request</h2><span class="tijd">5 min</span></div>
-<p class="uitleg">Of jullie hem mergen, beslissen jullie zelf.</p>
+<div class="kop"><h2>De matrix en de pull request</h2><span class="tijd">15:15</span></div>
+<p class="uitleg">Vul docs/agents/autonomie.md met tien echte wijzigingen, en begin met de fout die jullie plantten. Per wijziging: zie je het als het misgaat, kun je terug, en welke check vangt het?</p>
 <div class="blok"><span class="waar">Terminal</span>
 <div class="cmd"><code>git push -u origin werkplaats
 gh pr create --fill</code><button class="kopieer" type="button" data-cmd="git push -u origin werkplaats
@@ -215,7 +200,7 @@ gh pr create --fill">Kopieer</button></div></div>
 <div style="background: #FFFFFF; border: 1px solid #E7E3DC; border-radius: 22px; padding: 26px 30px; display: flex; flex-direction: column; gap: 12px">
 <span class="waar" style="color: #AF101A">Huiswerk</span>
 <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 26px">Na vandaag</h2>
-<div class="verwacht"><b>Evals</b>Maak van je echte geval een bestand in evals/ en voeg er twee aan toe.</div>
+<div class="verwacht"><b>Evals</b>Maak van je geplante fout een bestand in evals/ en voeg er twee aan toe. Draai ze opnieuw als je het harnas of het model verandert.</div>
 <div class="verwacht"><b>CI</b>Laat de reviewer bij elke pull request commentaar geven.</div>
 </div>
 <div style="background: #FFFFFF; border: 1px solid #E7E3DC; border-radius: 22px; padding: 26px 30px; display: flex; flex-direction: column; gap: 14px">
@@ -259,17 +244,14 @@ gh pr create --fill">Kopieer</button></div></div>
     kopieer(knop.getAttribute('data-cmd') || '');
   });
 
-  var velden = { voor: 'voor', na: 'na', issue: 'issue' };
+  var velden = ['basis', 'tak'];
   function bijwerken() {
-    var voor = document.getElementById('voor').value.trim() || '<commit-ervoor>';
-    var na = document.getElementById('na').value.trim() || '<commit-van-de-pr>';
-    var issue = document.getElementById('issue').value.trim() || '<bestand>';
-    var r = 'Laat de reviewer-subagent de wijzigingen in git diff ' + voor + '...' + na + ' reviewen.';
-    var i = 'Pak issues/' + issue + ' op.';
+    var basis = document.getElementById('basis').value.trim() || 'main';
+    var tak = document.getElementById('tak').value.trim() || 'pr/opschonen';
+    var r = 'Laat de reviewer-subagent de wijzigingen in git diff ' + basis + '...' + tak + ' reviewen.';
     document.getElementById('reviewPrompt').textContent = r; document.getElementById('reviewKnop').setAttribute('data-cmd', r);
-    document.getElementById('issuePrompt').textContent = i; document.getElementById('issueKnop').setAttribute('data-cmd', i);
   }
-  Object.keys(velden).forEach(function (id) {
+  velden.forEach(function (id) {
     var veld = document.getElementById(id);
     if (bewaard[id]) veld.value = bewaard[id];
     veld.addEventListener('input', function () { bewaard[id] = veld.value; bewaar(); bijwerken(); });

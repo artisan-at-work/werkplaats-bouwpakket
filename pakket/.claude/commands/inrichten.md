@@ -1,8 +1,8 @@
 ---
-description: Richt de harness van De Werkplaats in deze repo in. Schrijft concepten, het team keurt ze goed.
+description: Richt het harnas van De Werkplaats in deze repo in. Leest de repo, stelt het team een paar vragen en schrijft de bestanden.
 ---
 
-Je richt de harness van De Werkplaats in voor deze repository. Je schrijft concepten. Het team beoordeelt ze daarna, dus leg bij elke keuze kort uit waarom je hem maakte.
+Je richt het harnas van De Werkplaats in voor deze repository. Je leest eerst de repo, dan stel je het team vragen over wat je vond, en pas daarna schrijf je de bestanden. Het team beslist, jij doet voorstellen op basis van hun code.
 
 De sjablonen van het bouwpakket staan in `{{PAKKET}}`. Lees die eerst. Wat al in deze repo stond, blijft staan: je vult aan en voegt samen, je vervangt niets en je verwijdert niets. `docs/agents/stappenplan.html` is voor de mens: laat dat bestand staan zoals het is.
 
@@ -10,30 +10,53 @@ De sjablonen van het bouwpakket staan in `{{PAKKET}}`. Lees die eerst. Wat al in
 
 Kijk welke stack dit is en welke checks er al zijn. Lees in elk geval, als ze bestaan: `composer.json` of `package.json`, de testconfiguratie, `phpstan.neon` en een PHPStan-baseline, `rector.php`, `pint.json` of een PHP-CS-Fixer-configuratie, de workflows in `.github/workflows/`, de pre-commit- en pre-push-hooks, `README.md`, en een bestaande `CLAUDE.md`, `AGENTS.md` en `.claude/settings.json`.
 
-## 2. Schrijf de concepten
+Zet daarna een voorlopige `meting.txt` neer met alle checks die deze repo heeft, en draai `bin/meting`. `bin/meting` kent: gefaalde tests, overgeslagen tests, aantal tests, phpstan-fouten, regels in de phpstan-baseline, opmaakfouten, rector-wijzigingen, kwetsbare packages, tests aangepast zonder code, `telling "tekst"` en `eigen "naam": commando`. Zo ken je de waarde van nu voor elke check. Haal regels weg die een vraagteken geven.
 
-1. **CLAUDE.md.** Bestaat die al en verwijst hij niet naar AGENTS.md, zet dan `@AGENTS.md` als eerste regel en laat de rest staan.
-2. **AGENTS.md.** Bestond die al, voeg dan alleen toe wat ontbreekt uit het sjabloon: de meting en wanneer je klaar bent, de vaste regels (tests niet aanpassen, stoppen buiten de opdracht, migraties en deploys door een mens), en de verwijzingen naar `docs/agents/risico.md` en `docs/agents/autonomie.md`. Is het het sjabloon, vul het dan in met wat je in de repo ziet. Houd het op één scherm.
-3. **meting.txt.** Zet er de checks in die deze repo echt heeft. `bin/meting` kent: gefaalde tests, overgeslagen tests, aantal tests, phpstan-fouten, regels in de phpstan-baseline, opmaakfouten, rector-wijzigingen, kwetsbare packages, tests aangepast zonder code, `telling "tekst"` en `eigen "naam": commando`. Stel één eigen risico voor als telling, op basis van een patroon dat je in de code ziet en dat niet mag groeien. Draai daarna `bin/meting` en haal regels weg die een vraagteken geven. Kies `altijd 0` alleen voor een regel die nu al 0 is. Staat er nu al iets, zoals kwetsbare packages, kies dan `niet meer dan nu` en zeg erbij dat een mens het moet oplossen. Leg geen nulmeting vast: dat doet de mens na de beoordeling.
-4. **docs/agents/risico.md.** Eén voorstel voor een plek waar het in deze code stil misgaat, zoals de scheiding tussen klanten, autorisatie, oude data, geld of tijd. Noem het bestand of de klasse waar je het zag.
-5. **REVIEW.md.** Vul in wat bij deze repo falen is, op basis van risico.md en wat je in de code zag.
-6. **.claude/hooks/grens.sh.** Stel één eigen regel voor, op basis van wat je zag (deploy-scripts, database, productie). Zet hem actief in de lijst en zeg dat erbij.
+Zoek ook drie plekken waar het in deze code stil mis kan gaan: de scheiding tussen klanten, autorisatie per rol, oude data, geld, tijd of een berekening. Zoek per plek een patroon dat je kunt tellen en dat niet mag groeien.
+
+## 2. Stel de vragen
+
+Stel de vragen met je tool voor meerkeuzevragen (AskUserQuestion). Heb je die niet, stel ze dan als genummerde lijst in de chat en wacht op het antwoord. Per vraag hoogstens vier opties. Heb je er meer, verdeel ze dan over twee vragen. Zet bij elke optie in één regel wat je vond en waar, met de waarde van nu. Het team moet aan de opties kunnen zien wat je in hun code zag.
+
+Ronde 1, de meting:
+- "Welke checks wil je meten?" Meerdere antwoorden. Elke check die de repo heeft, met de waarde van nu, bijvoorbeeld "PHPStan-fouten: nu 0, level 7 uit phpstan.neon".
+- Voor elke gekozen check die nu niet 0 is: "Altijd 0, of niet meer dan nu?" Leg erbij uit dat altijd 0 betekent dat de agent pas klaar is als een mens het heeft opgelost.
+
+Ronde 2, het eigen risico:
+- "Waar gaat het bij jullie stil mis?" Eén antwoord. De drie plekken die je vond, elk met het bestand, het patroon en hoe vaak het nu voorkomt.
+
+Ronde 3, de grenzen:
+- "Wat mag een agent bij jullie nooit, ook niet met toestemming?" Meerdere antwoorden. Noem dat de vaste regels al aanstaan: force-push, een push naar of vanaf main, master of develop, reset --hard, migraties, rm buiten de map. Stel daarnaast regels voor uit wat je zag, zoals een deploy-script, een productie-env of een commando dat tegen productie werkt.
+
+Ronde 4, de reviewer:
+- "Waar moet de reviewer bij jullie op letten?" Meerdere antwoorden, op basis van wat je in de code zag.
+- "Waar hoeft hij niet op te letten?" Meerdere antwoorden, zoals gegenereerde bestanden, opmaak of lockfiles.
+
+## 3. Schrijf de bestanden
+
+Gebruik de antwoorden. Wat het team koos, schrijf je op. Wat het team niet koos, laat je weg.
+
+1. **meting.txt.** De gekozen checks met de gekozen grens, en het gekozen risico als `telling`. Zet bij een regel die niet op altijd 0 staat een opmerking met de waarde van nu en wat een mens moet doen.
+2. **docs/agents/risico.md.** Het gekozen risico: hoe het goed gaat, hoe het eruitziet als het misgaat, en hoe je het controleert. Noem het bestand of de klasse waar je het zag. Vond je een plek waar het nu al misgaat, schrijf die dan op als open punt voor de mens. Los het niet op.
+3. **REVIEW.md.** Waar hij op let en waar niet, uit ronde 4, met een verwijzing naar risico.md.
+4. **.claude/hooks/grens.sh.** De gekozen eigen regels, actief in de lijst. Claude Code vraagt hiervoor apart toestemming. Wordt die geweigerd, laat dan de regels zien die je wilde toevoegen.
+5. **AGENTS.md.** Bestond die al, voeg dan alleen toe wat ontbreekt uit het sjabloon: de meting en wanneer je klaar bent, de vaste regels (tests niet aanpassen, stoppen buiten de opdracht, migraties en deploys door een mens), en de verwijzingen naar `docs/agents/risico.md` en `docs/agents/autonomie.md`. Is het het sjabloon, vul het dan in met wat je in de repo ziet. Houd het op één scherm.
+6. **CLAUDE.md.** Bestaat die al en verwijst hij niet naar AGENTS.md, zet dan `@AGENTS.md` als eerste regel en laat de rest staan.
 7. **.claude/settings.json.** Bestond die al, voeg dan samen: de twee hooks uit het sjabloon, de allow-regels voor `bin/meting` en het testcommando, en de deny-regels voor `.env` en `evals/`. Alles wat er al stond, blijft.
 
-## 3. Sluit af
+Draai tot slot `bin/meting` met de nieuwe `meting.txt` en laat de tabel zien.
 
-Geef per bestand in twee regels wat je deed. Zet daaronder per bestand de vragen voor het team:
+## 4. Sluit af
 
-- **AGENTS.md:** Staan de regels erin die een nieuwe collega op dag één moet weten? Staat er iets in dat niet klopt? Is het kort genoeg?
-- **meting.txt:** Kloppen de checks met wat jullie nu draaien? Missen we er een? Is het eigen risico het goede?
-- **risico.md:** Is dit echt de plek waar het bij jullie stil misgaat? Wat weet het team dat niet in de code staat?
-- **REVIEW.md:** Is dit wat jullie bij een review zoeken? Waar moet hij juist niet op letten?
-- **grens.sh:** Is de voorgestelde regel goed? Wat mag een agent bij jullie nog meer nooit doen?
+Laat per bestand in één regel zien welk antwoord erin terechtkwam. Stel daarna nog twee vragen aan het team, zonder meerkeuze:
 
-Zeg tot slot dat de volgende stap is: de bestanden beoordelen, `claude` opnieuw starten zodat de hooks actief worden, en daarna `bin/meting --nulmeting`.
+- Lees AGENTS.md: staat er iets in dat niet klopt, of mist er iets wat een nieuwe collega op dag één moet weten?
+- Lees risico.md: wat weet het team over deze plek dat niet in de code staat?
+
+Zeg tot slot dat de volgende stap is: `claude` opnieuw starten zodat de hooks actief worden, en daarna `bin/meting --nulmeting`.
 
 ## Niet doen
 
 - Geen nulmeting vastleggen en niets committen.
-- Geen code buiten deze bestanden aanpassen.
+- Geen code buiten deze bestanden aanpassen, ook niet als je een fout vindt.
 - Niets verwijderen of overschrijven wat er al stond.

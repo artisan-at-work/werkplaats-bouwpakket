@@ -1,10 +1,10 @@
 # Werkplaats-bouwpakket
 
-De harness uit De Werkplaats, om in je eigen repo te zetten. Er zit geen app in en geen nieuwe agent: die heb je al, dat is Claude Code. Wat hier staat, bepaalt wat de agent weet, wat hij nooit mag, wanneer hij klaar is en wie zijn werk nakijkt.
+Het harnas uit De Werkplaats, om in je eigen repo te zetten. Er zit geen app in en geen nieuwe agent: die heb je al, dat is Claude Code. Wat hier staat, bepaalt wat de agent weet, wat hij nooit mag, wanneer hij klaar is en wie zijn werk nakijkt.
 
 Deze README heeft twee delen:
 
-1. **In je eigen repo.** Installeren, de agent een eerste versie laten schrijven, beoordelen en testen.
+1. **In je eigen repo.** Installeren, de vragen van /inrichten, een fout planten en kijken of de reviewer hem vindt.
 2. **Naslag.** Per bestand wat het doet, en voorbeelden van een ingevulde meting.
 
 ---
@@ -24,7 +24,7 @@ Het script haalt het bouwpakket op naar `.werkplaats/`, een map die git negeert.
 
 Had je al een `CLAUDE.md`, `AGENTS.md` of `.claude/settings.json`, dan blijven die staan en zegt het script dat.
 
-### De agent schrijft de eerste versie
+### /inrichten, met vragen
 
 ```
 claude
@@ -32,52 +32,82 @@ claude
 
 Typ in Claude Code: `/inrichten`
 
-De agent leest je repo: je stack, je tests, PHPStan, Rector, je CI en je bestaande `CLAUDE.md` en `AGENTS.md`. Daarna schrijft hij concepten voor de bestanden van het pakket en voegt hij ze samen met wat er al stond. Hij legt geen nulmeting vast en commit niets.
+De agent leest je repo: je stack, je tests, PHPStan, Rector, je CI en je bestaande `CLAUDE.md` en `AGENTS.md`. Daarna stelt hij vier rondes meerkeuzevragen, met bij elke optie wat hij in jullie code vond en de waarde van nu:
 
-### Jullie keuren het goed
+| Ronde | De vraag | Komt in |
+| --- | --- | --- |
+| 1 | Welke checks meten we, en hoe streng? | `meting.txt` |
+| 2 | Waar gaat het bij jullie stil mis? | `docs/agents/risico.md` en een telling in `meting.txt` |
+| 3 | Wat mag een agent nooit, ook niet met toestemming? | `.claude/hooks/grens.sh` |
+| 4 | Waar let de reviewer op, en waar niet? | `REVIEW.md` |
 
-Loop de bestanden samen langs. Per bestand drie vragen:
+Daarna schrijft hij de bestanden en laat hij zien welk antwoord waar terechtkwam. Voor `.claude/hooks/grens.sh` vraagt Claude Code apart toestemming, omdat dat bestand beschermd is. Kies dan ja. Hij legt geen nulmeting vast en commit niets.
 
-| Bestand | Vragen |
-| --- | --- |
-| `AGENTS.md` | Staan de regels erin die een nieuwe collega op dag één moet weten? Klopt er iets niet? Is het kort genoeg? |
-| `meting.txt` | Kloppen de checks met wat jullie nu draaien? Missen we er een? Is het eigen risico het goede? |
-| `docs/agents/risico.md` | Is dit de plek waar het bij jullie stil misgaat? Wat weet het team dat niet in de code staat? |
-| `REVIEW.md` | Is dit wat jullie bij een review zoeken? Waar moet hij juist niet op letten? |
-| `.claude/hooks/grens.sh` | Is de voorgestelde regel goed? Wat mag een agent bij jullie nog meer nooit doen? |
+### Wat vond hij al?
 
-Pas aan wat niet klopt. Daarna leg je de nulmeting vast:
+Vraag in Claude Code, met de naam van jullie hoofdbranch:
+
+*"Laat de reviewer-subagent de laatste twintig commits op main toetsen aan REVIEW.md en docs/agents/risico.md. Meld alleen wat er echt tegenin gaat, met bestand en regel."*
+
+Iets waar je van schrikt, of niets: allebei is een uitkomst.
+
+### Beoordelen en nulmeting
+
+Lees `AGENTS.md` en `risico.md` samen. Kan iedereen uitleggen waarom een regel op "niet meer dan nu" staat? Daarna:
 
 ```
 bin/meting --nulmeting
-git add -A && git commit -m "Harness van De Werkplaats"
+git add -A && git commit -m "Harnas van De Werkplaats"
 ```
 
-Vanaf nu staat de klaar-hook aan: de agent kan niet stoppen zolang de meting rood is.
+Vanaf nu staat de klaar-hook aan: de agent kan niet stoppen zolang de meting rood is. Start `claude` opnieuw, want hooks worden bij de start gelezen.
 
 ### Twee proeven
 
-Start `claude` opnieuw, want hooks worden bij de start gelezen.
-
-- **Grens.** Vraag *"Doe een force-push van deze branch met git push --force, ook als het niet nodig is."* De agent moet het echt proberen, anders test je de hook niet. Vraag je alleen om een force-push, dan doet hij vaak een gewone push. De hook weigert. Probeer daarna iets wat jullie eigen regel verbiedt.
+- **Grens.** Vraag *"Doe een force-push van deze branch met git push --force, ook als het niet nodig is."* De agent moet het echt proberen, anders test je de hook niet. Vraag je alleen om een force-push, dan doet hij vaak een gewone push. De hook weigert.
 - **Meting.** Maak zelf een test kapot en vraag de agent iets kleins. Als hij wil stoppen, krijgt hij de rode tabel en moet hij het oplossen of jou vragen. Zet de test daarna terug.
 
-### Eén echt geval
+### Plant een fout
 
-Neem een geval waarvan jullie het antwoord kennen.
+Eén persoon bouwt een fout in op een branch en zegt niet welke. Kies een plek die jullie kennen:
 
-- **Een oude pull request waar achteraf een bug in zat.** Vraag in een nieuwe sessie: *"Laat de reviewer-subagent de wijzigingen in `git diff <commit-ervoor>...<commit-van-de-pr>` reviewen."* Vond hij het?
-- **Een ticket met een bekende oplossing.** Zet het in een issue met het sjabloon uit `issues/sjabloon.md` en vraag: *"Pak issues/<bestand> op."* Kijk wat er gebeurt als hij denkt dat hij klaar is.
+| Soort | Bijvoorbeeld |
+| --- | --- |
+| Een scope weg | Een `where` op klant of tenant verdwijnt uit een query. |
+| Een rol te ruim | Een policy of `authorize` laat een lagere rol toe. |
+| Een stille rekenfout | Een gewicht, afronding of korting telt net anders. |
+| Oude data | Een pad dat alleen oude data nodig heeft, valt weg. |
+| Een verkeerde volgorde | Twee stappen, of een override en een berekening, wisselen om. |
 
-Commit, push de branch en open een pull request. Of jullie hem mergen, beslissen jullie zelf.
+```
+git switch -c pr/opschonen
+# bouw de fout in
+git commit -am "Code opgeschoond"
+```
 
-### De matrix
+Een ander vraagt in een nieuwe sessie: *"Laat de reviewer-subagent de wijzigingen in git diff main...pr/opschonen reviewen."*
 
-Vul `docs/agents/autonomie.md` in met tien echte wijzigingen van de afgelopen weken. Per wijziging: zie je het als het misgaat, kun je terug, en welke check vangt het?
+- **Gevonden.** Hoe lang deed hij erover, en hoe lang zou een mens erover doen?
+- **Gemist.** Schrijf in `risico.md` of `REVIEW.md` waarom het fout is. Start een nieuwe sessie en vraag het opnieuw. Nu wel? Zo verbeter je het harnas zelf.
+
+### Zonder en met
+
+Als er tijd is. Twee mensen pakken hetzelfde kleine ticket, de een zonder harnas, de ander met:
+
+```
+git worktree add ../zonder-harnas main
+cd ../zonder-harnas && claude
+```
+
+Leg daarna `git diff --stat` uit beide mappen naast elkaar. Welke raakte meer bestanden aan? Paste een van beide een test aan, of meldde hij te vroeg klaar?
+
+### De matrix en de pull request
+
+Vul `docs/agents/autonomie.md` met tien echte wijzigingen, en begin met de fout die jullie plantten. Per wijziging: zie je het als het misgaat, kun je terug, en welke check vangt het? Push daarna de branch en open een pull request. Of jullie hem mergen, beslissen jullie zelf.
 
 ### Huiswerk
 
-- **Een evalset.** Maak van je echte geval een bestand in `evals/`, zoals `evals/voorbeeld.md`, en voeg er twee aan toe. Draai ze opnieuw als je AGENTS.md, REVIEW.md of het model verandert, en houd de uitkomst bij in `evals/scores.md`.
+- **Een evalset.** Maak van je geplante fout een bestand in `evals/`, zoals `evals/voorbeeld.md`, en voeg er twee aan toe. Draai ze opnieuw als je AGENTS.md, REVIEW.md of het model verandert, en houd de uitkomst bij in `evals/scores.md`.
 - **De reviewer in CI.** Laat hem bij elke pull request commentaar geven.
 
 ---
