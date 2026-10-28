@@ -1,19 +1,47 @@
 #!/usr/bin/env bash
 # Zet het bouwpakket in de repo waar je nu staat. Overschrijft niets.
 #
-#   cd jouw-repo
+# Zonder iets te downloaden, in de map van je applicatie:
+#   curl -fsSL https://raw.githubusercontent.com/artisan-at-work/werkplaats-bouwpakket/main/installeer | bash
+#
+# Met het bouwpakket naast je repo:
 #   ../werkplaats-bouwpakket/installeer
 
-PAKKET="$(cd "$(dirname "$0")" && pwd)/pakket"
-
-if [ "$(pwd)" = "$(dirname "$PAKKET")" ]; then
-  echo "Je staat in het bouwpakket zelf. Ga naar je eigen repo, bijvoorbeeld: cd ../werkplaats-oefenrepo"
-  exit 1
-fi
+BRON="artisan-at-work/werkplaats-bouwpakket"
+TAK="${WERKPLAATS_TAK:-main}"
 
 if [ ! -f composer.json ] && [ ! -f package.json ]; then
   echo "Hier staat geen composer.json of package.json. Ga naar de map van je applicatie en probeer het opnieuw."
   exit 1
+fi
+
+HIER="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
+
+if [ -n "$HIER" ] && [ -f "$HIER/installeer" ] && [ -f "$HIER/pakket/.claude/commands/inrichten.md" ]; then
+  # Het bouwpakket staat lokaal.
+  PAKKET="$HIER/pakket"
+  if [ "$(pwd)" = "$HIER" ]; then
+    echo "Je staat in het bouwpakket zelf. Ga naar je eigen repo, bijvoorbeeld: cd ../werkplaats-oefenrepo"
+    exit 1
+  fi
+else
+  # Opgehaald met curl: download het pakket naar .werkplaats/ in deze repo.
+  # /inrichten leest daar de sjablonen. Git negeert de map.
+  echo "Bouwpakket ophalen..."
+  DOEL="$(pwd)/.werkplaats/bouwpakket"
+  rm -rf "$DOEL" && mkdir -p "$DOEL"
+  if ! (set -o pipefail; curl -fsSL "https://codeload.github.com/$BRON/tar.gz/$TAK" | tar xz -C "$DOEL" --strip-components=1) 2>/dev/null; then
+    if command -v gh >/dev/null && (set -o pipefail; gh api "repos/$BRON/tarball/$TAK" | tar xz -C "$DOEL" --strip-components=1) 2>/dev/null; then
+      :
+    else
+      echo "Het bouwpakket kon niet worden opgehaald. Is de repo bereikbaar, of ben je ingelogd met gh auth login?"
+      exit 1
+    fi
+  fi
+  PAKKET="$DOEL/pakket"
+  if [ -d .git ] && ! grep -qx '.werkplaats/' .git/info/exclude 2>/dev/null; then
+    echo '.werkplaats/' >> .git/info/exclude
+  fi
 fi
 
 nieuw=()
@@ -27,7 +55,7 @@ while IFS= read -r rel; do
     cp "$PAKKET/$rel" "$rel"
     nieuw+=("$rel")
   fi
-done < <(cd "$PAKKET" && find . -type f | sed 's|^\./||' | sort)
+done < <(cd "$PAKKET" && find . -type f ! -name ".DS_Store" | sed 's|^\./||' | sort)
 
 # /inrichten moet weten waar de sjablonen staan.
 if [ -f .claude/commands/inrichten.md ]; then

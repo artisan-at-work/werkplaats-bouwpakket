@@ -14,15 +14,18 @@ Deze README heeft drie delen:
 
 ### Installeren
 
-Zet het bouwpakket naast je repo en draai het installeerscript in de map van je applicatie, waar `composer.json` of `package.json` staat:
+Ga naar de map van je applicatie, waar `composer.json` of `package.json` staat, en maak een branch:
 
 ```
-git clone https://github.com/artisan-at-work/werkplaats-bouwpakket ../werkplaats-bouwpakket
 git switch -c werkplaats
-../werkplaats-bouwpakket/installeer
+curl -fsSL https://raw.githubusercontent.com/artisan-at-work/werkplaats-bouwpakket/main/installeer | bash
 ```
 
-Het script zet alleen bestanden neer die er nog niet zijn, en opent daarna het stappenplan (`docs/agents/stappenplan.html`) in je browser. Daarin staan alle stappen hieronder, met commando's die je kunt kopiëren. Had je al een `CLAUDE.md`, `AGENTS.md` of `.claude/settings.json`, dan blijven die staan en zegt het script dat.
+Het script haalt het bouwpakket op naar `.werkplaats/`, een map die git negeert. Je hoeft dus niets te clonen. Het zet alleen bestanden neer die er nog niet zijn, en opent daarna het stappenplan (`docs/agents/stappenplan.html`) in je browser. Daarin staan alle stappen hieronder, met commando's die je kunt kopiëren.
+
+Had je al een `CLAUDE.md`, `AGENTS.md` of `.claude/settings.json`, dan blijven die staan en zegt het script dat.
+
+Heb je het bouwpakket wel naast je repo staan, dan kan het ook zo: `../werkplaats-bouwpakket/installeer`.
 
 ### De agent schrijft de eerste versie
 

@@ -78,11 +78,11 @@ html{scroll-behavior:smooth}
 <div class="nr">✓</div>
 <div style="display: flex; flex-direction: column; gap: 14px">
 <div class="kop"><h2>Installeren</h2><span class="tijd">Gedaan</span></div>
-<p class="uitleg">Dit stappenplan opende omdat het installeerscript klaar is. Het zette alleen bestanden neer die er nog niet waren.</p>
+<p class="uitleg">Dit stappenplan opende omdat het installeerscript klaar is. Het zette alleen bestanden neer die er nog niet waren, en niets hoefde je zelf te downloaden.</p>
 <div class="blok"><span class="waar">Terminal · in je repo</span>
 <div class="cmd"><code>git switch -c werkplaats
-../werkplaats-bouwpakket/installeer</code><button class="kopieer" type="button" data-cmd="git switch -c werkplaats
-../werkplaats-bouwpakket/installeer">Kopieer</button></div></div>
+curl -fsSL https://raw.githubusercontent.com/artisan-at-work/werkplaats-bouwpakket/main/installeer | bash</code><button class="kopieer" type="button" data-cmd="git switch -c werkplaats
+curl -fsSL https://raw.githubusercontent.com/artisan-at-work/werkplaats-bouwpakket/main/installeer | bash">Kopieer</button></div></div>
 </div>
 </section>
 
