@@ -21,7 +21,8 @@
         ],
         "deny": [
             "Read(./.env)",
-            "Read(./.env.*)"
+            "Read(./.env.*)",
+            "Read(./evals/**)"
         ]
     },
     "hooks": {
@@ -29,14 +30,21 @@
             {
                 "matcher": "Bash",
                 "hooks": [
-                    { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/grens.sh\"" }
+                    {
+                        "type": "command",
+                        "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/grens.sh\""
+                    }
                 ]
             }
         ],
         "Stop": [
             {
                 "hooks": [
-                    { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/klaar.sh\"", "timeout": 600 }
+                    {
+                        "type": "command",
+                        "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/klaar.sh\"",
+                        "timeout": 600
+                    }
                 ]
             }
         ]

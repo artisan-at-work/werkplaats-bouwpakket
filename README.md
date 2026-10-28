@@ -46,12 +46,14 @@ bin/meting
 
 ## Stap 4 · Een eerste opdracht
 
+Twee soorten bestanden. Een **issue** in `issues/` is de opdracht voor de agent. Een **eval** in `evals/` is voor jou: wat de agent krijgt en wat het goede antwoord is, zodat je kunt scoren en het later opnieuw kunt doen.
+
 Kies wat bij jullie team past.
 
 **De reviewer op oude pull requests.**
 1. Vul `REVIEW.md` in: wat is bij jullie falen, en waar let de reviewer niet op?
 2. Maak per pull request een bestand in `evals/`, zoals `evals/voorbeeld.md`. Schrijf bij Verwacht wat er mis was.
-3. Start een nieuwe sessie en vraag: *"Laat de reviewer-subagent de branch `<naam>` reviewen ten opzichte van `main`."*
+3. Start per geval een nieuwe sessie en vraag: *"Laat de reviewer-subagent de wijzigingen in `git diff main...<branch>` reviewen."* Blijf zelf op je `werkplaats`-branch, want daar staat de harness. De agent kan de map `evals/` niet lezen, zodat hij de antwoorden niet ziet.
 4. Vul `evals/scores.md` in: vond hij het, op de goede plek, en hoeveel ruis gaf hij?
 5. Pas `REVIEW.md` aan op wat je zag, en draai één geval opnieuw.
 

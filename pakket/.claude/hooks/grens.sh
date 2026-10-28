@@ -8,6 +8,7 @@ regels=(
   'git reset --hard|geen git reset --hard'
   'artisan (migrate|db:wipe|db:seed)|geen migraties of databasewijzigingen, dat doet een mens'
   'rm -[a-zA-Z]*r[a-zA-Z]* +(/|~|\.\.)|geen rm buiten de werkmap'
+  'evals/|de map evals is voor de mens, daar staan de antwoorden'
 
   # Jullie eigen regel. Voorbeeld:
   # 'DB_HOST=.*productie|nooit tegen de productiedatabase'
