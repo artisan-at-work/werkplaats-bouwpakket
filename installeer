@@ -6,6 +6,11 @@
 
 PAKKET="$(cd "$(dirname "$0")" && pwd)/pakket"
 
+if [ "$(pwd)" = "$(dirname "$PAKKET")" ]; then
+  echo "Je staat in het bouwpakket zelf. Ga naar je eigen repo, bijvoorbeeld: cd ../werkplaats-oefenrepo"
+  exit 1
+fi
+
 if [ ! -f composer.json ] && [ ! -f package.json ]; then
   echo "Hier staat geen composer.json of package.json. Ga naar de map van je applicatie en probeer het opnieuw."
   exit 1
