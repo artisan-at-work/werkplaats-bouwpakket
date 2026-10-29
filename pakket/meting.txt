@@ -3,6 +3,10 @@
 # Er zijn drie grenzen: altijd 0, niet meer dan nu, niet minder dan nu.
 # "Nu" is de nulmeting: bin/meting --nulmeting. Pas daarna staat de klaar-hook aan.
 
+# Draait de repo in Docker, bijvoorbeeld met Laravel Sail? Haal dan het hekje weg.
+# Tests, PHPStan, Pint, Rector en composer draaien dan in de container.
+# via: ./vendor/bin/sail
+
 gefaalde tests                  altijd 0
 aantal tests                    niet minder dan nu
 phpstan-fouten                  niet meer dan nu

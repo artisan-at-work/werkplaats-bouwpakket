@@ -10,6 +10,8 @@ De sjablonen van het bouwpakket staan in `{{PAKKET}}`. Lees die eerst. Wat al in
 
 Kijk welke stack dit is en welke checks er al zijn. Lees in elk geval, als ze bestaan: `composer.json` of `package.json`, de testconfiguratie, `phpstan.neon` en een PHPStan-baseline, `rector.php`, `pint.json` of een PHP-CS-Fixer-configuratie, de workflows in `.github/workflows/`, de pre-commit- en pre-push-hooks, `README.md`, en een bestaande `CLAUDE.md`, `AGENTS.md` en `.claude/settings.json`.
 
+Kijk ook of de repo in Docker draait: een `vendor/bin/sail` met een `docker-compose.yml` of `compose.yaml` waarin `laravel.test` staat, of een README die zegt dat alles via Sail of Docker gaat. Zo ja, zet dan bovenaan `meting.txt` de regel `via: ./vendor/bin/sail`, zodat `bin/meting` de checks in de container draait. Controleer met `./vendor/bin/sail ps` of de container draait. Draait hij niet, vraag het team dan `./vendor/bin/sail up -d` te doen voordat je verder gaat. Gebruik in AGENTS.md en in de allow-regels dan ook de Sail-vorm van het testcommando, zoals `./vendor/bin/sail test`.
+
 Zet daarna een voorlopige `meting.txt` neer met alle checks die deze repo heeft, en draai `bin/meting`. `bin/meting` kent: gefaalde tests, overgeslagen tests, aantal tests, phpstan-fouten, regels in de phpstan-baseline, opmaakfouten, rector-wijzigingen, kwetsbare packages, tests aangepast zonder code, `telling "tekst"` en `eigen "naam": commando`. Zo ken je de waarde van nu voor elke check. Haal regels weg die een vraagteken geven.
 
 Zoek ook drie plekken waar het in deze code stil mis kan gaan: de scheiding tussen klanten, autorisatie per rol, oude data, geld, tijd of een berekening. Zoek per plek een patroon dat je kunt tellen en dat niet mag groeien.

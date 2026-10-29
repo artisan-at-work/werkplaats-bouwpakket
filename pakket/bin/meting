@@ -28,6 +28,22 @@ if [ ! -f "$CONF" ]; then
   exit 1
 fi
 
+# --- via een container -----------------------------------------------------
+# Draait de repo in Docker, bijvoorbeeld met Laravel Sail, zet dan bovenaan meting.txt:
+#   via: ./vendor/bin/sail
+# Dan draaien tests, PHPStan, Pint, Rector en composer in de container.
+
+VIA="$(sed -n 's/^via:[[:space:]]*//p' "$CONF" | head -1 | sed 's/[[:space:]]*$//')"
+
+php_run() {
+  # php_run vendor/bin/pest ...  of  php_run artisan test ...
+  if [ -n "$VIA" ]; then $VIA php "$@"; else "$@"; fi
+}
+
+composer_run() {
+  if [ -n "$VIA" ]; then $VIA composer "$@"; else composer "$@"; fi
+}
+
 # --- welke stack ---------------------------------------------------------
 
 if [ -f artisan ] || [ -f composer.json ]; then
@@ -49,11 +65,22 @@ draai_tests() {
   [ -f "$TMP/tests.done" ] && return
   touch "$TMP/tests.done"
   local junit="$TMP/junit.xml"
+  if [ -n "$VIA" ]; then
+    # De container ziet /tmp van de laptop niet: het rapport komt in de repo.
+    mkdir -p .werkplaats
+    junit=".werkplaats/meting-junit.xml"
+    rm -f "$junit"
+    if [ -d .git/info ] && ! grep -qxF '.werkplaats/' .git/info/exclude 2>/dev/null; then
+      echo '.werkplaats/' >> .git/info/exclude
+    fi
+  fi
   if [ "$stack" = "php" ]; then
     if [ -x vendor/bin/pest ]; then
-      vendor/bin/pest --colors=never --log-junit "$junit" >/dev/null 2>&1
+      php_run vendor/bin/pest --colors=never --log-junit "$junit" >/dev/null 2>&1
     elif [ -x vendor/bin/phpunit ]; then
-      vendor/bin/phpunit --colors=never --log-junit "$junit" >/dev/null 2>&1
+      php_run vendor/bin/phpunit --colors=never --log-junit "$junit" >/dev/null 2>&1
+    elif [ -n "$VIA" ]; then
+      php_run artisan test --log-junit "$junit" >/dev/null 2>&1
     else
       php artisan test --log-junit "$junit" >/dev/null 2>&1
     fi
@@ -73,6 +100,9 @@ draai_tests() {
   else
     # Geen rapport betekent dat de testrun zelf crashte: dat telt als rood.
     echo 1 > "$TMP/failed"; echo 0 > "$TMP/skipped"; echo 0 > "$TMP/passed"
+    if [ -n "$VIA" ]; then
+      echo "De tests draaiden niet via $VIA. Draait de container? Start hem met: $VIA up -d" >&2
+    fi
   fi
 }
 
@@ -89,7 +119,7 @@ meet() {
     "phpstan-fouten")
       [ -x vendor/bin/phpstan ] || { echo "?"; return; }
       local uit
-      uit="$(vendor/bin/phpstan analyse --error-format=json --no-progress --memory-limit=1G 2>/dev/null)"
+      uit="$(php_run vendor/bin/phpstan analyse --error-format=json --no-progress --memory-limit=1G 2>/dev/null)"
       local e f
       e="$(echo "$uit" | grep -o '"errors":[0-9]*' | head -1 | grep -o '[0-9]*')"
       f="$(echo "$uit" | grep -o '"file_errors":[0-9]*' | head -1 | grep -o '[0-9]*')"
@@ -97,24 +127,24 @@ meet() {
     "rector-wijzigingen")
       # Bestanden die Rector nog zou aanpassen.
       [ -x vendor/bin/rector ] || { echo "?"; return; }
-      vendor/bin/rector process --dry-run --output-format=json 2>/dev/null | grep -o '"changed_files": *[0-9]*' | grep -o '[0-9]*$' || echo 0 ;;
+      php_run vendor/bin/rector process --dry-run --output-format=json 2>/dev/null | grep -o '"changed_files": *[0-9]*' | grep -o '[0-9]*$' || echo 0 ;;
     "regels in de phpstan-baseline")
       if [ -f phpstan-baseline.neon ]; then grep -c 'message:' phpstan-baseline.neon; else echo 0; fi ;;
     "opmaakfouten")
       if [ -x vendor/bin/pint ]; then
-        vendor/bin/pint --test --format=json 2>/dev/null | grep -o '"path":' | wc -l | tr -d ' '
+        php_run vendor/bin/pint --test --format=json 2>/dev/null | grep -o '"path":' | wc -l | tr -d ' '
       elif [ -x vendor/bin/php-cs-fixer ]; then
-        vendor/bin/php-cs-fixer fix --dry-run --format=json 2>/dev/null | grep -o '"name":' | wc -l | tr -d ' '
+        php_run vendor/bin/php-cs-fixer fix --dry-run --format=json 2>/dev/null | grep -o '"name":' | wc -l | tr -d ' '
       elif [ -x vendor/bin/phpcs ]; then
-        vendor/bin/phpcs --report=json -q 2>/dev/null | grep -o '"totals":{"errors":[0-9]*' | grep -o '[0-9]*$' || echo 0
+        php_run vendor/bin/phpcs --report=json -q 2>/dev/null | grep -o '"totals":{"errors":[0-9]*' | grep -o '[0-9]*$' || echo 0
       elif [ "$stack" = "node" ] && [ -f node_modules/.bin/prettier ]; then
         node_modules/.bin/prettier --list-different . 2>/dev/null | wc -l | tr -d ' '
       else
         echo "?"
       fi ;;
     "kwetsbare packages")
-      if [ "$stack" = "php" ] && command -v composer >/dev/null; then
-        composer audit --format=json --no-interaction 2>/dev/null | grep -o '"advisoryId"' | wc -l | tr -d ' '
+      if [ "$stack" = "php" ] && { [ -n "$VIA" ] || command -v composer >/dev/null; }; then
+        composer_run audit --format=json --no-interaction 2>/dev/null | grep -o '"advisoryId"' | wc -l | tr -d ' '
       elif [ "$stack" = "node" ]; then
         npm audit --audit-level=high --json 2>/dev/null | grep -o '"severity": *"\(high\|critical\)"' | wc -l | tr -d ' '
       else
@@ -162,7 +192,7 @@ regels=()
 while IFS= read -r regel || [ -n "$regel" ]; do
   regel="$(echo "$regel" | sed 's/[[:space:]]*$//')"
   [ -z "$regel" ] && continue
-  case "$regel" in \#*) continue ;; esac
+  case "$regel" in \#*) continue ;; via:*) continue ;; esac
 
   grens=""
   for g in "altijd 0" "niet meer dan nu" "niet minder dan nu"; do

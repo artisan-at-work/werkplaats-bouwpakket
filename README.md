@@ -122,7 +122,7 @@ Vul `docs/agents/autonomie.md` met tien echte wijzigingen, en begin met de fout 
 | `docs/agents/autonomie.md` | De matrix: per soort wijziging hoe ver de agent zelf gaat. |
 | `.claude/settings.json` | Wat zonder vragen mag, wat nooit gelezen wordt, en de twee hooks. |
 | `.claude/hooks/grens.sh` | Weigert vóór elk commando wat nooit mag: force-push, een push naar of vanaf main, master of develop, `reset --hard`, migraties, `rm` buiten de map, en jullie eigen regels. |
-| `meting.txt` | Wat je meet, met de grens erachter: `altijd 0`, `niet meer dan nu` of `niet minder dan nu`. |
+| `meting.txt` | Wat je meet, met de grens erachter: `altijd 0`, `niet meer dan nu` of `niet minder dan nu`. Draait de repo in Docker, zet dan bovenaan `via: ./vendor/bin/sail`: dan draaien de checks in de container. |
 | `bin/meting` | Meet wat in `meting.txt` staat. `--nulmeting` legt "nu" vast, `--poort` geeft foutcode 2 als iets rood is. Je hoeft het script niet te lezen. |
 | `.claude/hooks/klaar.sh` | Laat de agent niet stoppen zolang de meting rood is. Staat pas aan na de nulmeting. |
 | `.claude/agents/reviewer.md` | Een tweede agent met schone context die de diff leest tegen jullie regels, en om onweerlegbaar bewijs vraagt. |
