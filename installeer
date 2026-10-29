@@ -12,6 +12,20 @@ if [ ! -f composer.json ] && [ ! -f package.json ]; then
   exit 1
 fi
 
+# Niet op de hoofdbranch: op een eigen branch kan alles weer weg en wordt het een pull request.
+tak="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+case "$tak" in
+  main|master|develop|trunk)
+    if [ "${WERKPLAATS_OP_HOOFDBRANCH:-}" != "1" ]; then
+      echo "Je staat op $tak. Maak eerst een eigen branch en draai deze regel daarna opnieuw:"
+      echo
+      echo "  git switch -c werkplaats"
+      echo
+      echo "Wil je het bouwpakket toch op $tak zetten, zet dan WERKPLAATS_OP_HOOFDBRANCH=1 voor bash."
+      exit 1
+    fi ;;
+esac
+
 HIER="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
 
 if [ -n "$HIER" ] && [ -f "$HIER/installeer" ] && [ -f "$HIER/pakket/.claude/commands/inrichten.md" ]; then
