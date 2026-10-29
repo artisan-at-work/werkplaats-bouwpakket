@@ -10,6 +10,8 @@ regels=(
   'artisan (migrate|db:wipe|db:seed)|geen migraties of databasewijzigingen, dat doet een mens'
   'rm -[a-zA-Z]*r[a-zA-Z]* +(/|~|\.\.)|geen rm buiten de werkmap'
   'evals/|de map evals is voor de mens, daar staan de antwoorden'
+  'bin/meting[^;&|]*--nulmeting|de nulmeting legt de mens vast, in de eigen terminal'
+  '(>|(^|[^a-zA-Z_-])(tee|cp|mv|rm|truncate|ln)[[:space:]]|sed[[:space:]]+-[a-zA-Z]*i|perl[[:space:]]+-[a-zA-Z]*i|git[[:space:]]+(checkout|restore|rm|stash))[^;&|]*meting-nulmeting|meting-nulmeting.txt is van de mens, daaraan verandert de agent niets'
 
   # Jullie eigen regel. Voorbeeld:
   # 'DB_HOST=.*productie|nooit tegen de productiedatabase'

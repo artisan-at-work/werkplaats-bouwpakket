@@ -44,7 +44,7 @@ Gebruik de antwoorden. Wat het team koos, schrijf je op. Wat het team niet koos,
 4. **.claude/hooks/grens.sh.** De gekozen eigen regels, actief in de lijst. Claude Code vraagt hiervoor apart toestemming. Wordt die geweigerd, laat dan de regels zien die je wilde toevoegen.
 5. **AGENTS.md.** Bestond die al, voeg dan alleen toe wat ontbreekt uit het sjabloon: de meting en wanneer je klaar bent, de vaste regels (tests niet aanpassen, stoppen buiten de opdracht, migraties en deploys door een mens), en de verwijzingen naar `docs/agents/risico.md` en `docs/agents/autonomie.md`. Is het het sjabloon, vul het dan in met wat je in de repo ziet. Houd het op één scherm.
 6. **CLAUDE.md.** Bestaat die al en verwijst hij niet naar AGENTS.md, zet dan `@AGENTS.md` als eerste regel en laat de rest staan.
-7. **.claude/settings.json.** Bestond die al, voeg dan samen: de twee hooks uit het sjabloon, de allow-regels voor `bin/meting` en het testcommando, en de deny-regels voor `.env` en `evals/`. Alles wat er al stond, blijft.
+7. **.claude/settings.json.** Bestond die al, voeg dan samen: de twee hooks uit het sjabloon, de allow-regels voor `bin/meting` en het testcommando, en de deny-regels voor `.env`, `evals/` en `meting-nulmeting.txt`. Alles wat er al stond, blijft.
 
 Draai tot slot `bin/meting` met de nieuwe `meting.txt` en laat de tabel zien.
 

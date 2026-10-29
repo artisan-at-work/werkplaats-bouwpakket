@@ -53,7 +53,7 @@ Iets waar je van schrikt, of niets: allebei is een uitkomst.
 
 ### Beoordelen en nulmeting
 
-Lees `AGENTS.md` en `risico.md` samen. Kan iedereen uitleggen waarom een regel op "niet meer dan nu" staat? Daarna:
+Lees `AGENTS.md` en `risico.md` samen. Kan iedereen uitleggen waarom een regel op "niet meer dan nu" staat? Leg daarna in je eigen terminal de nulmeting vast. Via Claude Code weigert de grens-hook dat, omdat de agent niet zelf bepaalt waartegen hij gemeten wordt.
 
 ```
 bin/meting --nulmeting
@@ -121,10 +121,10 @@ Vul `docs/agents/autonomie.md` met tien echte wijzigingen, en begin met de fout 
 | `docs/agents/risico.md` | Eén plek waar het stil misgaat: hoe het goed gaat, hoe het eruitziet als het misgaat, hoe je het controleert. |
 | `docs/agents/autonomie.md` | De matrix: per soort wijziging hoe ver de agent zelf gaat. |
 | `.claude/settings.json` | Wat zonder vragen mag, wat nooit gelezen wordt, en de twee hooks. |
-| `.claude/hooks/grens.sh` | Weigert vóór elk commando wat nooit mag: force-push, een push naar of vanaf main, master of develop, `reset --hard`, migraties, `rm` buiten de map, en jullie eigen regels. |
+| `.claude/hooks/grens.sh` | Weigert vóór elk commando wat nooit mag: force-push, een push naar of vanaf main, master of develop, `reset --hard`, migraties, `rm` buiten de map, de nulmeting opnieuw zetten of aanpassen, en jullie eigen regels. |
 | `meting.txt` | Wat je meet, met de grens erachter: `altijd 0`, `niet meer dan nu` of `niet minder dan nu`. Draait de repo in Docker, zet dan bovenaan `via: ./vendor/bin/sail`: dan draaien de checks in de container. |
 | `bin/meting` | Meet wat in `meting.txt` staat. `--nulmeting` legt "nu" vast, `--poort` geeft foutcode 2 als iets rood is. Je hoeft het script niet te lezen. |
-| `.claude/hooks/klaar.sh` | Laat de agent niet stoppen zolang de meting rood is. Staat pas aan na de nulmeting. |
+| `.claude/hooks/klaar.sh` | Laat de agent niet stoppen zolang de meting rood is. Staat pas aan na de nulmeting. De meting mag twintig minuten duren. |
 | `.claude/agents/reviewer.md` | Een tweede agent met schone context die de diff leest tegen jullie regels, en om onweerlegbaar bewijs vraagt. |
 | `REVIEW.md` | Wat bij jullie falen is, waar de reviewer niet op let, en hoe hij meldt. |
 | `issues/sjabloon.md` | Een opdracht: context, klaar als, niet doen. |
