@@ -103,7 +103,9 @@ curl -fsSL https://raw.githubusercontent.com/artisan-at-work/werkplaats-bouwpakk
 <div class="nr">3</div>
 <div style="display: flex; flex-direction: column; gap: 14px">
 <div class="kop"><h2>Wat vond hij al?</h2><span class="tijd">15 min</span></div>
-<p class="uitleg">Laat de reviewer jullie recente werk toetsen aan de regels die jullie net kozen. Gebruik de naam van jullie hoofdbranch.</p>
+<p class="uitleg">Sluit Claude Code eerst af en start hem opnieuw. Pas dan zijn de reviewer en de hooks geladen. Laat daarna de reviewer jullie recente werk toetsen aan de regels die jullie net kozen. Gebruik de naam van jullie hoofdbranch.</p>
+<div class="blok"><span class="waar">Terminal</span>
+<div class="cmd"><code>claude</code><button class="kopieer" type="button" data-cmd="claude">Kopieer</button></div></div>
 <div class="blok"><span class="waar">In Claude Code</span>
 <div class="prompt"><span>Laat de reviewer-subagent de laatste twintig commits op main toetsen aan REVIEW.md en docs/agents/risico.md. Meld alleen wat er echt tegenin gaat, met bestand en regel.</span><button class="kopieer" type="button" data-cmd="Laat de reviewer-subagent de laatste twintig commits op main toetsen aan REVIEW.md en docs/agents/risico.md. Meld alleen wat er echt tegenin gaat, met bestand en regel.">Kopieer</button></div></div>
 <div class="verwacht"><b>Verwacht</b>Iets waar je van schrikt, of niets. Allebei is een uitkomst.</div>
@@ -119,7 +121,7 @@ curl -fsSL https://raw.githubusercontent.com/artisan-at-work/werkplaats-bouwpakk
 <div class="cmd"><code>bin/meting --nulmeting
 git add -A &amp;&amp; git commit -m "Harnas van De Werkplaats"</code><button class="kopieer" type="button" data-cmd="bin/meting --nulmeting
 git add -A &amp;&amp; git commit -m &quot;Harnas van De Werkplaats&quot;">Kopieer</button></div></div>
-<div class="klaarals"><b>Klaar als</b><span>meting-nulmeting.txt in de commit staat. Start daarna claude opnieuw, want hooks worden bij de start gelezen.</span></div>
+<div class="klaarals"><b>Klaar als</b><span>meting-nulmeting.txt in de commit staat. Vanaf nu laat de klaar-hook de agent niet stoppen zolang de meting rood is.</span></div>
 <label class="vink"><input type="checkbox" data-stap="4">Gedaan</label>
 </div>
 </section>

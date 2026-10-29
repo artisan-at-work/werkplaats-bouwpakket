@@ -45,7 +45,7 @@ Daarna schrijft hij de bestanden en laat hij zien welk antwoord waar terechtkwam
 
 ### Wat vond hij al?
 
-Vraag in Claude Code, met de naam van jullie hoofdbranch:
+Sluit Claude Code af en start hem opnieuw, want de reviewer en de hooks worden bij de start geladen. Vraag dan in Claude Code, met de naam van jullie hoofdbranch:
 
 *"Laat de reviewer-subagent de laatste twintig commits op main toetsen aan REVIEW.md en docs/agents/risico.md. Meld alleen wat er echt tegenin gaat, met bestand en regel."*
 
@@ -60,7 +60,7 @@ bin/meting --nulmeting
 git add -A && git commit -m "Harnas van De Werkplaats"
 ```
 
-Vanaf nu staat de klaar-hook aan: de agent kan niet stoppen zolang de meting rood is. Start `claude` opnieuw, want hooks worden bij de start gelezen.
+Vanaf nu staat de klaar-hook aan: de agent kan niet stoppen zolang de meting rood is. Opnieuw starten hoeft niet, de hook kijkt zelf of de nulmeting er is.
 
 ### Twee proeven
 

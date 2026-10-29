@@ -55,7 +55,7 @@ Laat per bestand in één regel zien welk antwoord erin terechtkwam. Stel daarna
 - Lees AGENTS.md: staat er iets in dat niet klopt, of mist er iets wat een nieuwe collega op dag één moet weten?
 - Lees risico.md: wat weet het team over deze plek dat niet in de code staat?
 
-Zeg tot slot dat de volgende stap is: `claude` opnieuw starten zodat de hooks actief worden, en daarna `bin/meting --nulmeting`.
+Zeg tot slot dat de volgende stap stap 3 van het stappenplan is: `claude` afsluiten en opnieuw starten, zodat de reviewer en de hooks geladen worden, en dan de reviewer de laatste commits laten toetsen. Zeg erbij dat de nulmeting pas in stap 4 komt, nadat het team AGENTS.md en risico.md samen heeft gelezen.
 
 ## Niet doen
 
