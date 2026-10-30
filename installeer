@@ -98,7 +98,13 @@ echo "Volgende stap: start claude en typ /inrichten"
 if [ -f "$PLAN" ] && [ -z "${WERKPLAATS_NIET_OPENEN:-}" ]; then
   case "$(uname -s)" in
     Darwin) open "$PLAN" ;;
-    Linux) command -v xdg-open >/dev/null && xdg-open "$PLAN" >/dev/null 2>&1 & ;;
+    Linux)
+      if { [ -n "${WSL_DISTRO_NAME:-}" ] || grep -qi microsoft /proc/version 2>/dev/null; } && command -v wslpath >/dev/null && command -v explorer.exe >/dev/null; then
+        # WSL: open het stappenplan in de browser van Windows.
+        explorer.exe "$(wslpath -w "$PLAN")" >/dev/null 2>&1 &
+      elif command -v xdg-open >/dev/null; then
+        xdg-open "$PLAN" >/dev/null 2>&1 &
+      fi ;;
     MINGW*|MSYS*|CYGWIN*) start "" "$PLAN" ;;
   esac
 fi
